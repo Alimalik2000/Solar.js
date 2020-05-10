@@ -1,16 +1,27 @@
 
 //load all textures
-	var suntexture = new THREE.TextureLoader().load( 'textures/suntexture.jpg' );
-	var mercurytexture = new THREE.TextureLoader().load( 'textures/mercurytexture.jpg' );
-	var venustexture = new THREE.TextureLoader().load( 'textures/venustexture.jpg' );
-	var earthtexture = new THREE.TextureLoader().load( 'textures/earthtexture.jpg' );
-	var marstexture = new THREE.TextureLoader().load( 'textures/marstexture.jpg' );
-	var jupitertexture = new THREE.TextureLoader().load( 'textures/jupitertexture.jpg' );
-	var saturntexture = new THREE.TextureLoader().load( 'textures/saturntexture.jpg' );
-	var uranustexture = new THREE.TextureLoader().load( 'textures/uranustexture.png' );
-	var neptunetexture = new THREE.TextureLoader().load( 'textures/neptunetexture.jpg' );
-	var galaxytexture1 = new THREE.TextureLoader().load( 'textures/galaxy.jpg' );
-	var galaxytexture2 = new THREE.TextureLoader().load( 'textures/galaxy2.jpg' );
+var suntexture = new THREE.TextureLoader().load( 'textures/suntexture.jpg' );
+var mercurytexture = new THREE.TextureLoader().load( 'textures/mercurytexture.jpg' );
+var venustexture = new THREE.TextureLoader().load( 'textures/venustexture.jpg' );
+var earthtexture = new THREE.TextureLoader().load( 'textures/earthtexture.jpg' );
+var marstexture = new THREE.TextureLoader().load( 'textures/marstexture.jpg' );
+var jupitertexture = new THREE.TextureLoader().load( 'textures/jupitertexture.jpg' );
+var saturntexture = new THREE.TextureLoader().load( 'textures/saturntexture.jpg' );
+var uranustexture = new THREE.TextureLoader().load( 'textures/uranustexture.png' );
+var neptunetexture = new THREE.TextureLoader().load( 'textures/neptunetexture.jpg' );
+var galaxytexture1 = new THREE.TextureLoader().load( 'textures/galaxy.jpg' );
+var galaxytexture2 = new THREE.TextureLoader().load( 'textures/galaxy2.jpg' );
+
+//load all normals
+var suntextureNORMAL = new THREE.TextureLoader().load( 'normals/suntextureNORMAL.png' );
+var mercurytextureNORMAL = new THREE.TextureLoader().load( 'normals/mercurytextureNORMAL.png' );
+var venustextureNORMAL = new THREE.TextureLoader().load( 'normals/venustextureNORMAL.png' );
+var earthtextureNORMAL = new THREE.TextureLoader().load( 'normals/earthtextureNORMAL.png' );
+var marstextureNORMAL = new THREE.TextureLoader().load( 'normals/marstextureNORMAL.png' );
+var jupitertextureNORMAL = new THREE.TextureLoader().load( 'normals/jupitertextureNORMAL.png' );
+var saturntextureNORMAL = new THREE.TextureLoader().load( 'normals/saturntextureNORMAL.png' );
+var uranustextureNORMAL = new THREE.TextureLoader().load( 'normals/uranustextureNORMAL.png' );
+var neptunetextureNORMAL = new THREE.TextureLoader().load( 'normals/neptunetextureNORMAL.png' );
 
 
 //basic three setup
@@ -29,7 +40,7 @@ document.body.appendChild(renderer.domElement);
 //all planets setup
 
 //sun for sunlight
-var sun = new THREE.SphereGeometry(3, 1, 1);
+var sun = new THREE.SphereGeometry(.001, 1, 1);
 var sunLight = new THREE.PointLight(0xffffff);
 sunLight.position.set(0, 0, 0); 
 sunLight.castShadow = true; 
@@ -37,19 +48,20 @@ sunLight.shadowMapWidth = 1024;
 sunLight.shadowMapHeight = 1024; 
 sunLight.shadowCameraNear = 500; 
 sunLight.shadowCameraFar = 4000;
-sunLight.add(new THREE.Mesh(sun, new THREE.MeshBasicMaterial({ color: 0xffa500 })));
+sunLight.add(new THREE.Mesh(sun, new THREE.MeshBasicMaterial({ color: 0x000000 })));
 sunLight.shadowCameraFov = 30;
 scene.add(sunLight);
 
-//sun with texture
+//sun with texture    
 var sun2 = new THREE.SphereGeometry(3, 50, 50);
-var material = new THREE.MeshBasicMaterial( { map: suntexture } );
+var material = new THREE.MeshBasicMaterial( { map: suntexture} );
 var sunsphere = new THREE.Mesh( sun2, material );
 scene.add( sunsphere );
 
+
 //outer glow for sun
 var num=3.01;
-var glow = new THREE.MeshBasicMaterial( { color: 0xff0000, transparent: true, opacity: 0.03 } );
+var glow = new THREE.MeshBasicMaterial( { color: 0xf00000, transparent: true, opacity: 0.03 } );
 for(var i=0;i<10;i++)
 {
 	var sphereGeom =  new THREE.SphereGeometry( num, 100, 100 );
@@ -61,42 +73,42 @@ for(var i=0;i<10;i++)
 
 //Mercury
 var geometry = new THREE.SphereGeometry(0.3, 10, 10);
-var material = new THREE.MeshLambertMaterial( { map:mercurytexture } );
+var material = new THREE.MeshPhongMaterial( { map:mercurytexture, normalMap: mercurytextureNORMAL } );
 var mercury = new THREE.Mesh( geometry, material );
 mercury.position.set(-5, 0, -5);
 scene.add(mercury);
 
 //Venus
 var geometry = new THREE.SphereGeometry(0.4, 20, 20);
-var material = new THREE.MeshLambertMaterial( { map:venustexture } );
+var material = new THREE.MeshPhongMaterial( { map:venustexture, normalMap:venustextureNORMAL } );
 var venus = new THREE.Mesh( geometry, material );
 venus.position.set(-7, 0, 7);
 scene.add(venus);
 
 //Earth
 var geometry = new THREE.SphereGeometry(0.6, 20, 20);
-var material = new THREE.MeshLambertMaterial( { map:earthtexture } );
+var material = new THREE.MeshPhongMaterial( { map:earthtexture, normalMap: earthtextureNORMAL } );
 var earth = new THREE.Mesh( geometry, material );
 earth.position.set(20, 0, -20);
 scene.add(earth);
 
 //Mars
 var geometry = new THREE.SphereGeometry(0.5, 20, 20);
-var material = new THREE.MeshLambertMaterial( { map:marstexture } );
+var material = new THREE.MeshPhongMaterial( { map:marstexture, normalMap: marstextureNORMAL } );
 var mars = new THREE.Mesh( geometry, material );
 mars.position.set(10, 0, 10);
 scene.add(mars);
 
 //Jupiter
 var geometry = new THREE.SphereGeometry(2, 20, 20);
-var material = new THREE.MeshLambertMaterial( { map:jupitertexture } );
+var material = new THREE.MeshPhongMaterial( { map:jupitertexture, normalMap: jupitertextureNORMAL} );
 var jupiter = new THREE.Mesh( geometry, material );
 jupiter.position.set(20, 0, -20);
 scene.add(jupiter);
 
 //Jupiter ring
 var geometry = new THREE.RingGeometry( 2.2, 3, 32 );
-var material = new THREE.MeshLambertMaterial( { map:jupitertexture, side: THREE.DoubleSide } );
+var material = new THREE.MeshPhongMaterial( { map:jupitertexture, normalMap: jupitertextureNORMAL, side: THREE.DoubleSide, opacity: 0.5} );
 var jupiterring = new THREE.Mesh( geometry, material );
 jupiterring.rotation.x=11;
 jupiterring.position.set(20, 0, -20);
@@ -104,14 +116,14 @@ scene.add( jupiterring );
 
 //Saturn
 var geometry = new THREE.SphereGeometry(1.2, 20, 20);
-var material = new THREE.MeshLambertMaterial( { map:saturntexture } );
+var material = new THREE.MeshPhongMaterial( { map:saturntexture, normalMap: saturntextureNORMAL } );
 var saturn = new THREE.Mesh( geometry, material );
 saturn.position.set(-10, 0, -20);
 scene.add(saturn);
 
 //Saturn ring
 var geometry = new THREE.RingGeometry( 2, 2.9, 32 );
-var material = new THREE.MeshLambertMaterial( { map:saturntexture, side: THREE.DoubleSide } );
+var material = new THREE.MeshPhongMaterial( { map:saturntexture, normalMap: saturntextureNORMAL, side: THREE.DoubleSide, opacity: 0.5 } );
 var saturnring = new THREE.Mesh( geometry, material );
 saturnring.rotation.x=90;
 saturn.position.set(-10, 0, -20);
@@ -119,28 +131,28 @@ scene.add( saturnring );
 
 //Uranus
 var geometry = new THREE.SphereGeometry(1, 20, 20);
-var material = new THREE.MeshLambertMaterial( { map:uranustexture } );
+var material = new THREE.MeshPhongMaterial( { map:uranustexture, normalMap: uranustextureNORMAL} );
 var uranus = new THREE.Mesh( geometry, material );
 uranus.position.set(20, 0, -20);
 scene.add(uranus);
 
 //Uranus ring
 var geometry = new THREE.RingGeometry( 2.1, 2.5, 32 );
-var material = new THREE.MeshLambertMaterial( { map:uranustexture, side: THREE.DoubleSide } );
+var material = new THREE.MeshPhongMaterial( { map:uranustexture, normalMap: uranustextureNORMAL , side: THREE.DoubleSide, opacity: 0.5 } );
 var uranusring = new THREE.Mesh( geometry, material );
 uranusring.position.set(-10, 0, -20);
 scene.add( uranusring );
 
 // Neptune.
 var geometry = new THREE.SphereGeometry(1, 20, 20);
-var material = new THREE.MeshLambertMaterial( { map:neptunetexture } );
+var material = new THREE.MeshPhongMaterial( { map:neptunetexture, normalMap:neptunetextureNORMAL } );
 var neptune = new THREE.Mesh( geometry, material );
 neptune.position.set(50, 0, -20);
 scene.add(neptune);
 
 //Neptune ring
 var geometry = new THREE.RingGeometry( 2.2, 2.4, 32 );
-var material = new THREE.MeshLambertMaterial( { map:neptunetexture, side: THREE.DoubleSide } );
+var material = new THREE.MeshPhongMaterial( { map:neptunetexture, normalMap: neptunetextureNORMAL, side: THREE.DoubleSide , opacity: 0.5} );
 var neptunering = new THREE.Mesh( geometry, material );
 neptunering.position.set(-10, 0, -20);
 neptunering.rotation.x=-90;
@@ -190,7 +202,7 @@ for (i = 0; i < totalObjects; i ++)
   vertex.y = (Math.random()-.5)*2000;
   vertex.z = (Math.random()-.5)*20000;
 
-  if(distanceVector(vertex, new THREE.Vector3(0,0,0))>100)
+  if(distanceVector(vertex, new THREE.Vector3(0,0,0))>150)
   {
 	geometry2.vertices.push( vertex );
   }
