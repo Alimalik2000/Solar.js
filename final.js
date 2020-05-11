@@ -60,7 +60,7 @@ scene.add(sunLight);
 
 //sun with texture    
 var sun2 = new THREE.SphereGeometry(3, 50, 50);
-var material = new THREE.MeshBasicMaterial( { map: suntexture} );
+var material = new THREE.MeshBasicMaterial( { map: suntexture, normalMap: suntextureNORMAL} );
 var sunsphere = new THREE.Mesh( sun2, material );
 scene.add( sunsphere );
 
@@ -100,7 +100,7 @@ scene.add(earth);
 
 //earth moon
 var geometry = new THREE.SphereGeometry(.3, 20, 20);
-var material = new THREE.MeshLambertMaterial( { map:earthmoontexture, normalMap:earthmoontextureNORMAL} );
+var material = new THREE.MeshPhongMaterial( { map:earthmoontexture, normalMap:earthmoontextureNORMAL} );
 var earthmoon = new THREE.Mesh( geometry, material );
 earthmoon.position.set(20, .25, -20);
 scene.add(earthmoon);
@@ -120,7 +120,7 @@ marsmoon1.position.set(10, 0, 10);
 scene.add(marsmoon1);
 
 //Mars moon2 Deimos
-var geometry = new THREE.SphereGeometry(0.16, 20, 20);
+var geometry = new THREE.SphereGeometry(0.12, 20, 20);
 var material = new THREE.MeshPhongMaterial( { map:marsmoon2texture, normalMap: marsmoon2textureNORMAL } );
 var marsmoon2 = new THREE.Mesh( geometry, material );
 marsmoon2.position.set(10, 0, 10);
@@ -351,6 +351,8 @@ function render() {
   	moveparticles=0;
   }
 	
+
+
   renderer.render(scene, camera);
 }
 
@@ -387,45 +389,91 @@ function main()
 var seconds = 0;
 var interval ;
 var starting=true;
-
+var reverse=false;
 function zoomOut(seconds) { 
   
   interval = setInterval(function() {
     clearInterval(interval);      
     if(starting) 
     {    
-    	if(camera.position.z<7)
+    	if(reverse==false&&camera.position.z<7)
     	{
     		camera.position.z+=.0009;
     		scene.rotation.y+=.00005;
     	}
-    	else if(camera.position.z<15)
+    	else if(reverse==false&&camera.position.z<15)
     	{
     		{
     		camera.position.z+=.00085;
     		scene.rotation.y+=.000045;
     		}
     	}
-    	else if(camera.position.z<25)
+    	else if(reverse==false&&camera.position.z<25)
     	{
     		{
     		camera.position.z+=.0008;
     		scene.rotation.y+=.00004;
     		}
     	}
-    	else if(camera.position.z<35)
+    	else if(reverse==false&&camera.position.z<35)
     	{
     		{
     		camera.position.z+=.00075;
     		scene.rotation.y+=.000035;
     		}
     	}
-    	else if(camera.position.z<45)
+    	else if(reverse==false&&camera.position.z<45)
     	{
     		{
     		camera.position.z+=.00070;
     		scene.rotation.y+=.00003;
     		}
+    	}
+    	else if(reverse==false&&camera.position.z<55)
+    	{
+    		{
+    		camera.position.z+=.00065;
+    		scene.rotation.y+=.000025;
+    		}
+    	}
+    	else if(reverse==false&&camera.position.z<65)
+    	{
+    		{
+    		camera.position.z+=.00060;
+    		scene.rotation.y+=.00002;
+    		}
+    	}
+    	else if(reverse==false&&camera.position.z<75)
+    	{
+    		{
+    		camera.position.z+=.00055;
+    		scene.rotation.y+=.000015;
+
+    		if(camera.position.z<76)
+    		{
+    			reverse=true;
+    		}
+    	}
+    		}
+    	else if(reverse==true&&camera.position.z>70)
+    	{
+    		camera.position.z-=.00050;
+    		scene.rotation.y+=.000015;
+    	}
+    	else if(reverse==true&&camera.position.z>60)
+    	{
+    		camera.position.z-=.00045;
+    	scene.rotation.y+=.000010;
+    	}
+    	else if(reverse==true&&camera.position.z>50)
+    	{
+    		camera.position.z-=.00040;
+    		scene.rotation.y+=.000005;
+    	}
+    	else if(reverse==true&&camera.position.z>40)
+    	{
+    		camera.position.z-=.00035;
+    		scene.rotation.y+=.0000025;
     	}
     	else
     	{
