@@ -6,6 +6,8 @@ var venustexture = new THREE.TextureLoader().load( 'textures/venustexture.jpg' )
 var earthtexture = new THREE.TextureLoader().load( 'textures/earthtexture.jpg' );
 var earthmoontexture = new THREE.TextureLoader().load( 'textures/earthmoontexture.jpg' );
 var marstexture = new THREE.TextureLoader().load( 'textures/marstexture.jpg' );
+var marsmoon1texture = new THREE.TextureLoader().load( 'textures/marsmoon1texture.jpg' );
+var marsmoon2texture = new THREE.TextureLoader().load( 'textures/marsmoon2texture.jpg' );
 var jupitertexture = new THREE.TextureLoader().load( 'textures/jupitertexture.jpg' );
 var saturntexture = new THREE.TextureLoader().load( 'textures/saturntexture.jpg' );
 var uranustexture = new THREE.TextureLoader().load( 'textures/uranustexture.png' );
@@ -20,6 +22,8 @@ var venustextureNORMAL = new THREE.TextureLoader().load( 'normals/venustextureNO
 var earthtextureNORMAL = new THREE.TextureLoader().load( 'normals/earthtextureNORMAL.png' );
 var earthmoontextureNORMAL = new THREE.TextureLoader().load( 'textures/earthmoontextureNORMAL.png' );
 var marstextureNORMAL = new THREE.TextureLoader().load( 'normals/marstextureNORMAL.png' );
+var marsmoon1textureNORMAL = new THREE.TextureLoader().load( 'normals/marsmoon1textureNORMAL.png' );
+var marsmoon2textureNORMAL = new THREE.TextureLoader().load( 'normals/marsmoon2textureNORMAL.png' );
 var jupitertextureNORMAL = new THREE.TextureLoader().load( 'normals/jupitertextureNORMAL.png' );
 var saturntextureNORMAL = new THREE.TextureLoader().load( 'normals/saturntextureNORMAL.png' );
 var uranustextureNORMAL = new THREE.TextureLoader().load( 'normals/uranustextureNORMAL.png' );
@@ -108,6 +112,20 @@ var mars = new THREE.Mesh( geometry, material );
 mars.position.set(10, 0, 10);
 scene.add(mars);
 
+//Mars moon1 Phobos
+var geometry = new THREE.SphereGeometry(0.2, 20, 20);
+var material = new THREE.MeshPhongMaterial( { map:marsmoon1texture, normalMap: marsmoon1textureNORMAL } );
+var marsmoon1 = new THREE.Mesh( geometry, material );
+marsmoon1.position.set(10, 0, 10);
+scene.add(marsmoon1);
+
+//Mars moon2 Deimos
+var geometry = new THREE.SphereGeometry(0.16, 20, 20);
+var material = new THREE.MeshPhongMaterial( { map:marsmoon2texture, normalMap: marsmoon2textureNORMAL } );
+var marsmoon2 = new THREE.Mesh( geometry, material );
+marsmoon2.position.set(10, 0, 10);
+scene.add(marsmoon2);
+
 //Jupiter
 var geometry = new THREE.SphereGeometry(2, 20, 20);
 var material = new THREE.MeshPhongMaterial( { map:jupitertexture, normalMap: jupitertextureNORMAL} );
@@ -146,7 +164,7 @@ uranus.position.set(20, 0, -20);
 scene.add(uranus);
 
 //Uranus ring
-var geometry = new THREE.RingGeometry( 2.1, 2.5, 32 );
+var geometry = new THREE.RingGeometry( 1.6, 2.0, 32 );
 var material = new THREE.MeshPhongMaterial( { map:uranustexture, normalMap: uranustextureNORMAL , side: THREE.DoubleSide, opacity: 0.5 } );
 var uranusring = new THREE.Mesh( geometry, material );
 uranusring.position.set(-10, 0, -20);
@@ -258,11 +276,22 @@ function render() {
     //earth moon rotation
   earthmoon.position.x = earth.position.x+Math.sin( time * 1.1 ) * 1.5;
   earthmoon.position.z = earth.position.z-Math.cos( time * 1.1 ) * 1.5;
+  earthmoon.rotation.y-=.001;
 
   //mars rotation
   mars.position.x = Math.sin( time * 1 ) * 18;
   mars.position.y = Math.cos( time * 1 ) * 4;
   mars.position.z = Math.cos( time * 1 ) * 18;
+
+  //mars moon1 rotation
+  marsmoon1.position.x = mars.position.x + Math.sin( time * 5 ) * 1.25;
+  marsmoon1.position.y = mars.position.y - .2;
+  marsmoon1.position.z = mars.position.z - Math.cos( time * 5 ) * 1.25;
+
+   //mars moon2 rotation
+  marsmoon2.position.x = mars.position.x - Math.sin( time * 3 ) * 2.5;
+  marsmoon2.position.y = mars.position.y +.1;
+  marsmoon2.position.z = mars.position.z - Math.cos( time * 3 ) * 2.5;
   
   //jupiter rotation
   jupiter.position.x = jupiterring.position.x = Math.sin( time * 0.5 ) * 25;
