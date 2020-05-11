@@ -79,7 +79,7 @@ function createLight()
 }
 
 
-var sunsphere, sun2, mercury,venus, earth, earthmoon, mars, marsmoon1, marsmoon2, jupiter, jupiterring,
+var sun, mercury,venus, earth, earthmoon, mars, marsmoon1, marsmoon2, jupiter, jupiterring,
 saturn, saturnring, uranus, uranusring, neptune, neptunering;
 
 function createPlanets()
@@ -87,11 +87,10 @@ function createPlanets()
 
 
 	//sun 
-	 sun2 = new THREE.SphereGeometry(3, 50, 50);
+	var geometry = new THREE.SphereGeometry(3, 50, 50);
 	var material = new THREE.MeshBasicMaterial( { map: suntexture, normalMap: suntextureNORMAL} );
-	sunsphere = new THREE.Mesh( sun2, material );
-	scene.add( sunsphere );
-
+	sun = new THREE.Mesh( geometry, material );
+	scene.add( sun );
 
 	//outer glow for sun
 	var num=3.01;
@@ -104,111 +103,110 @@ function createPlanets()
 		num+=.07;
 	}
 
-
 	//Mercury
-	var geometry = new THREE.SphereGeometry(0.3, 10, 10);
-	var material = new THREE.MeshPhongMaterial( { map:mercurytexture, normalMap: mercurytextureNORMAL } );
+	geometry = new THREE.SphereGeometry(0.3, 10, 10);
+	material = new THREE.MeshPhongMaterial( { map:mercurytexture, normalMap: mercurytextureNORMAL } );
 	mercury = new THREE.Mesh( geometry, material );
 	mercury.position.set(-5, 0, -5);
 	scene.add(mercury);
 
 	//Venus
-	var geometry = new THREE.SphereGeometry(0.4, 20, 20);
-	var material = new THREE.MeshPhongMaterial( { map:venustexture, normalMap:venustextureNORMAL } );
+	geometry = new THREE.SphereGeometry(0.4, 20, 20);
+	material = new THREE.MeshPhongMaterial( { map:venustexture, normalMap:venustextureNORMAL } );
 	venus = new THREE.Mesh( geometry, material );
 	venus.position.set(-7, 0, 7);
 	scene.add(venus);
 
 	//Earth
-	var geometry = new THREE.SphereGeometry(0.6, 20, 20);
-	var material = new THREE.MeshPhongMaterial( { map:earthtexture, normalMap: earthtextureNORMAL } );
+	geometry = new THREE.SphereGeometry(0.6, 20, 20);
+	material = new THREE.MeshPhongMaterial( { map:earthtexture, normalMap: earthtextureNORMAL } );
 	earth = new THREE.Mesh( geometry, material );
 	earth.position.set(20, 0, -20);
 	scene.add(earth);
 
 	//earth moon
-	var geometry = new THREE.SphereGeometry(.3, 20, 20);
-	var material = new THREE.MeshLambertMaterial( { map:earthmoontexture} );
+	geometry = new THREE.SphereGeometry(.3, 20, 20);
+	material = new THREE.MeshPhongMaterial( { map:earthmoontexture } );
 	earthmoon = new THREE.Mesh( geometry, material );
 	earthmoon.position.set(20, .25, -20);
 	scene.add(earthmoon);
 
 	//Mars
-	var geometry = new THREE.SphereGeometry(0.5, 20, 20);
-	var material = new THREE.MeshPhongMaterial( { map:marstexture, normalMap: marstextureNORMAL } );
+	geometry = new THREE.SphereGeometry(0.5, 20, 20);
+	material = new THREE.MeshPhongMaterial( { map:marstexture, normalMap: marstextureNORMAL } );
 	mars = new THREE.Mesh( geometry, material );
 	mars.position.set(10, 0, 10);
 	scene.add(mars);
 
 	//Mars moon1 Phobos
-	var geometry = new THREE.SphereGeometry(0.2, 20, 20);
-	var material = new THREE.MeshPhongMaterial( { map:marsmoon1texture, normalMap: marsmoon1textureNORMAL } );
+	geometry = new THREE.SphereGeometry(0.2, 20, 20);
+	material = new THREE.MeshPhongMaterial( { map:marsmoon1texture, normalMap: marsmoon1textureNORMAL } );
 	marsmoon1 = new THREE.Mesh( geometry, material );
 	marsmoon1.position.set(10, 0, 10);
 	scene.add(marsmoon1);
 
 	//Mars moon2 Deimos
-	var geometry = new THREE.SphereGeometry(0.12, 20, 20);
-	var material = new THREE.MeshPhongMaterial( { map:marsmoon2texture, normalMap: marsmoon2textureNORMAL } );
+	geometry = new THREE.SphereGeometry(0.12, 20, 20);
+	material = new THREE.MeshPhongMaterial( { map:marsmoon2texture, normalMap: marsmoon2textureNORMAL } );
 	marsmoon2 = new THREE.Mesh( geometry, material );
 	marsmoon2.position.set(10, 0, 10);
 	scene.add(marsmoon2);
 
 	//Jupiter
-	var geometry = new THREE.SphereGeometry(2, 20, 20);
-	var material = new THREE.MeshPhongMaterial( { map:jupitertexture, normalMap: jupitertextureNORMAL} );
+	geometry = new THREE.SphereGeometry(2, 20, 20);
+	material = new THREE.MeshPhongMaterial( { map:jupitertexture, normalMap: jupitertextureNORMAL} );
 	jupiter = new THREE.Mesh( geometry, material );
 	jupiter.position.set(20, 0, -20);
 	scene.add(jupiter);
 
 	//Jupiter ring
-	var geometry = new THREE.RingGeometry( 2.2, 3, 32 );
-	var material = new THREE.MeshPhongMaterial( { map:jupitertexture, normalMap: jupitertextureNORMAL, side: THREE.DoubleSide, opacity: 0.5} );
+	geometry = new THREE.RingGeometry( 2.2, 3, 32 );
+	material = new THREE.MeshPhongMaterial( { map:jupitertexture, normalMap: jupitertextureNORMAL, side: THREE.DoubleSide, opacity: 0.5} );
 	jupiterring = new THREE.Mesh( geometry, material );
 	jupiterring.rotation.x=11;
 	jupiterring.position.set(20, 0, -20);
 	scene.add( jupiterring );
 
 	//Saturn
-	var geometry = new THREE.SphereGeometry(1.2, 20, 20);
-	var material = new THREE.MeshPhongMaterial( { map:saturntexture, normalMap: saturntextureNORMAL } );
+	geometry = new THREE.SphereGeometry(1.2, 20, 20);
+	material = new THREE.MeshPhongMaterial( { map:saturntexture, normalMap: saturntextureNORMAL } );
 	saturn = new THREE.Mesh( geometry, material );
 	saturn.position.set(-10, 0, -20);
 	scene.add(saturn);
 
 	//Saturn ring
-	var geometry = new THREE.RingGeometry( 2, 2.9, 32 );
-	var material = new THREE.MeshPhongMaterial( { map:saturntexture, normalMap: saturntextureNORMAL, side: THREE.DoubleSide, opacity: 0.5 } );
+	geometry = new THREE.RingGeometry( 2, 2.9, 32 );
+	material = new THREE.MeshPhongMaterial( { map:saturntexture, normalMap: saturntextureNORMAL, side: THREE.DoubleSide, opacity: 0.5 } );
 	saturnring = new THREE.Mesh( geometry, material );
 	saturnring.rotation.x=90;
 	saturn.position.set(-10, 0, -20);
 	scene.add( saturnring );
 
 	//Uranus
-	var geometry = new THREE.SphereGeometry(1, 20, 20);
-	var material = new THREE.MeshPhongMaterial( { map:uranustexture, normalMap: uranustextureNORMAL} );
+	geometry = new THREE.SphereGeometry(1, 20, 20);
+	material = new THREE.MeshPhongMaterial( { map:uranustexture, normalMap: uranustextureNORMAL} );
 	uranus = new THREE.Mesh( geometry, material );
 	uranus.position.set(20, 0, -20);
 	scene.add(uranus);
 
 	//Uranus ring
-	var geometry = new THREE.RingGeometry( 1.6, 2.0, 32 );
-	var material = new THREE.MeshPhongMaterial( { map:uranustexture, normalMap: uranustextureNORMAL , side: THREE.DoubleSide, opacity: 0.5 } );
+	geometry = new THREE.RingGeometry( 1.6, 2.0, 32 );
+	material = new THREE.MeshPhongMaterial( { map:uranustexture, normalMap: uranustextureNORMAL , side: THREE.DoubleSide, opacity: 0.5 } );
 	uranusring = new THREE.Mesh( geometry, material );
 	uranusring.position.set(-10, 0, -20);
 	uranusring.rotation.x=3;
 	scene.add( uranusring );
 
 	// Neptune.
-	var geometry = new THREE.SphereGeometry(1, 20, 20);
-	var material = new THREE.MeshPhongMaterial( { map:neptunetexture, normalMap:neptunetextureNORMAL } );
+	geometry = new THREE.SphereGeometry(1, 20, 20);
+	material = new THREE.MeshPhongMaterial( { map:neptunetexture, normalMap:neptunetextureNORMAL } );
 	neptune = new THREE.Mesh( geometry, material );
 	neptune.position.set(50, 0, -20);
 	scene.add(neptune);
 
 	//Neptune ring
-	var geometry = new THREE.RingGeometry( 2.2, 2.4, 32 );
-	var material = new THREE.MeshPhongMaterial( { map:neptunetexture, normalMap: neptunetextureNORMAL, side: THREE.DoubleSide , opacity: 0.5} );
+	geometry = new THREE.RingGeometry( 2.2, 2.4, 32 );
+	material = new THREE.MeshPhongMaterial( { map:neptunetexture, normalMap: neptunetextureNORMAL, side: THREE.DoubleSide , opacity: 0.5} );
 	neptunering = new THREE.Mesh( geometry, material );
 	neptunering.position.set(-10, 0, -20);
 	neptunering.rotation.x=-90;
@@ -229,23 +227,18 @@ function createBackground()
 	scene.add(galaxy1);
 
 	//Galaxy 2
-	var geometry = new THREE.BoxGeometry(100, 1, 100);
-	var material = new THREE.MeshBasicMaterial( { map:galaxytexture1 } );
 	galaxy2 = new THREE.Mesh( geometry, material );
 	galaxy2.position.set(200, -800, -100);
 	scene.add(galaxy2);
 
 	//Galaxy 3
-	var geometry = new THREE.BoxGeometry(1, 100, 100);
-	var material = new THREE.MeshBasicMaterial( { map:galaxytexture2 } );
+	material = new THREE.MeshBasicMaterial( { map:galaxytexture2 } );
 	galaxy3 = new THREE.Mesh( geometry, material );
 	galaxy3.position.set(-900, 200, -400);
 	galaxy3.rotation.y+=100;
 	scene.add(galaxy3);
 
 	//Galaxy 4
-	var geometry = new THREE.BoxGeometry(100, 100, 1);
-	var material = new THREE.MeshBasicMaterial( { map:galaxytexture2 } );
 	galaxy4 = new THREE.Mesh( geometry, material );
 	galaxy4.position.set(100, -100, 1000);
 	galaxy4.rotation.y-=50;
@@ -272,7 +265,7 @@ function createBackground()
 	  
 	}
 
-	var material = new THREE.ParticleBasicMaterial( { size: 3 });
+	material = new THREE.ParticleBasicMaterial( { size: 3 });
 	particles = new THREE.ParticleSystem( geometry2, material );
 	scene.add( particles ); 
 
@@ -282,7 +275,6 @@ function createBackground()
 
 
 var moveparticles=0;//used in render to move particles
-
 
 function render() {
   requestAnimationFrame(render);
@@ -296,9 +288,9 @@ function render() {
   galaxy4.rotation.z-=.003;
 
   //sun rotation
-  sunsphere.rotation.x+=.0002;
-  sunsphere.rotation.y+=.0002;
-  sunsphere.rotation.z+=.0002;
+  sun.rotation.x+=.0002;
+  sun.rotation.y+=.0002;
+  sun.rotation.z+=.0002;
 
   //mercury rotation
   mercury.position.x = Math.sin( time * 4.5 ) * 5;
@@ -361,54 +353,26 @@ function render() {
 
   //used to move particles slghtly
   moveparticles++;
- var ps=.04;
- 
-  if(moveparticles<1000)
-  {
-  	particles.position.x+=ps;
-  }
-  else if(moveparticles<2000)
-  {
-  	particles.position.y+=ps;
-  }
-  else if(moveparticles<3000)
-  {
-  	particles.position.z+=ps;
-  }
-  else if(moveparticles<4000)
-  {
-  	particles.position.x-=ps;
-  }
-  else if(moveparticles<5000)
-  {
-  	particles.position.y-=ps;
-  }
-  else if(moveparticles<6000)
-  {
-  	particles.position.z-=ps;
-  }
-  else
-  {
-  	moveparticles=0;
-  }
-	
+
+	 if(moveparticles<3000)
+	 {
+	 	particles.position.x+=.03;
+	 	particles.position.z-=.03;
+
+	 }
+	 else if(moveparticles<6000)
+	 {
+	 	particles.position.x-=.03;
+	 	particles.position.z+=.03;
+	 }
+	 else
+	 {
+	 	moveparticles=0;
+	 }
 
 
   renderer.render(scene, camera);
 }
-
-//method to find distance bewteen two three vectors
-function distanceVector( v1, v2 )
-{
-    var dx = v1.x - v2.x;
-    var dy = v1.y - v2.y;
-    var dz = v1.z - v2.z;
-
-    return Math.sqrt( dx * dx + dy * dy + dz * dz );
-}
-
-
-
 
 
 
@@ -513,3 +477,12 @@ function zoomOut(seconds) {
 }
 
 
+//method to find distance bewteen two three vectors
+function distanceVector( v1, v2 )
+{
+    var dx = v1.x - v2.x;
+    var dy = v1.y - v2.y;
+    var dz = v1.z - v2.z;
+
+    return Math.sqrt( dx * dx + dy * dy + dz * dz );
+}
