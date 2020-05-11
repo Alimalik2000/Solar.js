@@ -4,6 +4,7 @@ var suntexture = new THREE.TextureLoader().load( 'textures/suntexture.jpg' );
 var mercurytexture = new THREE.TextureLoader().load( 'textures/mercurytexture.jpg' );
 var venustexture = new THREE.TextureLoader().load( 'textures/venustexture.jpg' );
 var earthtexture = new THREE.TextureLoader().load( 'textures/earthtexture.jpg' );
+var earthmoontexture = new THREE.TextureLoader().load( 'textures/earthmoontexture.jpg' );
 var marstexture = new THREE.TextureLoader().load( 'textures/marstexture.jpg' );
 var jupitertexture = new THREE.TextureLoader().load( 'textures/jupitertexture.jpg' );
 var saturntexture = new THREE.TextureLoader().load( 'textures/saturntexture.jpg' );
@@ -17,6 +18,7 @@ var suntextureNORMAL = new THREE.TextureLoader().load( 'normals/suntextureNORMAL
 var mercurytextureNORMAL = new THREE.TextureLoader().load( 'normals/mercurytextureNORMAL.png' );
 var venustextureNORMAL = new THREE.TextureLoader().load( 'normals/venustextureNORMAL.png' );
 var earthtextureNORMAL = new THREE.TextureLoader().load( 'normals/earthtextureNORMAL.png' );
+var earthmoontextureNORMAL = new THREE.TextureLoader().load( 'textures/earthmoontextureNORMAL.png' );
 var marstextureNORMAL = new THREE.TextureLoader().load( 'normals/marstextureNORMAL.png' );
 var jupitertextureNORMAL = new THREE.TextureLoader().load( 'normals/jupitertextureNORMAL.png' );
 var saturntextureNORMAL = new THREE.TextureLoader().load( 'normals/saturntextureNORMAL.png' );
@@ -29,7 +31,7 @@ var scene, renderer, camera, controls;
 
 scene = new THREE.Scene();
 
-camera = new THREE.PerspectiveCamera(50,
+camera = new THREE.PerspectiveCamera(45,
 window.innerWidth/window.innerHeight, 0.1, 1000);
 
 renderer = new THREE.WebGLRenderer();
@@ -92,6 +94,13 @@ var earth = new THREE.Mesh( geometry, material );
 earth.position.set(20, 0, -20);
 scene.add(earth);
 
+//earth moon
+var geometry = new THREE.SphereGeometry(.3, 20, 20);
+var material = new THREE.MeshLambertMaterial( { map:earthmoontexture, normalMap:earthmoontextureNORMAL} );
+var earthmoon = new THREE.Mesh( geometry, material );
+earthmoon.position.set(20, .25, -20);
+scene.add(earthmoon);
+
 //Mars
 var geometry = new THREE.SphereGeometry(0.5, 20, 20);
 var material = new THREE.MeshPhongMaterial( { map:marstexture, normalMap: marstextureNORMAL } );
@@ -141,6 +150,7 @@ var geometry = new THREE.RingGeometry( 2.1, 2.5, 32 );
 var material = new THREE.MeshPhongMaterial( { map:uranustexture, normalMap: uranustextureNORMAL , side: THREE.DoubleSide, opacity: 0.5 } );
 var uranusring = new THREE.Mesh( geometry, material );
 uranusring.position.set(-10, 0, -20);
+uranusring.rotation.x=3;
 scene.add( uranusring );
 
 // Neptune.
@@ -215,12 +225,10 @@ scene.add( particles );
 var moveparticles=0;//used in render to move particles
 
 
-
-
 function render() {
   requestAnimationFrame(render);
 
-  var time = Date.now() * 0.0002;
+  var time = Date.now() * 0.0001;
 
   //galaxy rotation
   galaxy1.rotation.x+=.001;
@@ -246,7 +254,11 @@ function render() {
   //earth rotation
   earth.position.x = Math.sin( time * 1.5 ) * 13;
   earth.position.z = Math.cos( time * 1.5 ) * 13;
-  
+
+    //earth moon rotation
+  earthmoon.position.x = earth.position.x+Math.sin( time * 1.1 ) * 1.5;
+  earthmoon.position.z = earth.position.z-Math.cos( time * 1.1 ) * 1.5;
+
   //mars rotation
   mars.position.x = Math.sin( time * 1 ) * 18;
   mars.position.y = Math.cos( time * 1 ) * 4;
@@ -270,6 +282,12 @@ function render() {
   neptune.position.x = neptunering.position.x = Math.sin( time * 0.1 ) * 50;
   neptune.position.y = neptunering.position.y = Math.cos( time * 0.1 ) * 20;
   neptune.position.z = neptunering.position.z = Math.cos( time * 0.1 ) * 50;
+
+  //ring rotation
+  uranusring.rotation.z-=.0025;
+  saturnring.rotation.z+=.0025;
+  jupiterring.rotation.z-=.0025;
+  neptunering.rotation.z-=.0025;
 
   //used to move particles slghtly
   moveparticles++;
@@ -307,7 +325,6 @@ function render() {
   renderer.render(scene, camera);
 }
 
-
 //method to find distance bewteen two three vectors
 function distanceVector( v1, v2 )
 {
@@ -317,7 +334,6 @@ function distanceVector( v1, v2 )
 
     return Math.sqrt( dx * dx + dy * dy + dz * dz );
 }
-
 
 
 main();
