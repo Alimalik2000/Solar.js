@@ -53,8 +53,6 @@ function Main()
 	createBackground();
 	render();
 	
-	
-	
 }
 
 function intro()
@@ -90,25 +88,71 @@ function createLight()
 var sun, mercury,venus, earth, earthmoon, mars, marsmoon1, marsmoon2, jupiter, jupiterring,
 saturn, saturnring, uranus, uranusring, neptune, neptunering;
 
+var glow1,glow2,glow3,glow4,glow5,glow6,glow7,glow7,glow9,glow10;
+
 function createPlanets()
 {
 
 	//sun 
-	var geometry = new THREE.SphereGeometry(3, 50, 50);
-	var material = new THREE.MeshBasicMaterial( { map: suntexture, normalMap: suntextureNORMAL} );
+	var geometry = new THREE.SphereGeometry(2.70, 50, 50);
+	var material = new THREE.MeshBasicMaterial( { map:suntexture} );
 	sun = new THREE.Mesh( geometry, material );
 	scene.add( sun );
 
 	//outer glow for sun
-	var num=3.01;
-	var glow = new THREE.MeshBasicMaterial( { color: 0xf00f0f, transparent: true, opacity: 0.03 } );
-	for(var i=0;i<10;i++)
-	{
-		var sphereGeom =  new THREE.SphereGeometry( num, 100, 100 );
-		var sphere = new THREE.Mesh( sphereGeom, glow );
-		//scene.add(sphere);
-		num+=.07;
-	}
+	var op=1.2;
+
+	geometry =  new THREE.SphereGeometry( 2.75, 30, 30 );
+	material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: .3*op } );
+	glow1 = new THREE.Mesh( geometry, material );
+	scene.add(glow1);
+
+	geometry =  new THREE.SphereGeometry( 2.81, 30, 30 );
+	material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: .29*op} );
+	glow2 = new THREE.Mesh( geometry, material );
+	scene.add(glow2);
+
+	geometry =  new THREE.SphereGeometry( 2.88, 30, 30 );
+	material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: .27*op } );
+	glow3 = new THREE.Mesh( geometry, material );
+	scene.add(glow3);
+
+	geometry =  new THREE.SphereGeometry( 2.96, 30, 30 );
+	material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: .24*op } );
+	glow4 = new THREE.Mesh( geometry, material );
+	scene.add(glow4);
+
+	geometry =  new THREE.SphereGeometry( 3.03, 30, 30 );
+	material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: .19*op } );
+	glow5 = new THREE.Mesh( geometry, material );
+	scene.add(glow5);
+
+	geometry =  new THREE.SphereGeometry( 3.13, 30, 30 );
+	material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: .13*op } );
+	glow6 = new THREE.Mesh( geometry, material );
+	scene.add(glow6);
+
+	geometry =  new THREE.SphereGeometry( 3.24, 30, 30 );
+	material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: .05*op } );
+	glow7 = new THREE.Mesh( geometry, material );
+	scene.add(glow7);
+
+	geometry =  new THREE.SphereGeometry( 3.36, 30, 30 );
+	material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: .01*op } );
+	glow8 = new THREE.Mesh( geometry, material );
+	scene.add(glow8);
+
+	geometry =  new THREE.SphereGeometry( 3.49, 30, 30 );
+	material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: .005*op } );
+	glow9 = new THREE.Mesh( geometry, material );
+	scene.add(glow9);
+
+	geometry =  new THREE.SphereGeometry( 3.63, 30, 30 );
+	material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: .001*op } );
+	glow10 = new THREE.Mesh( geometry, material );
+	scene.add(glow10);
+
+
 
 	//Mercury
 	geometry = new THREE.SphereGeometry(0.3, 10, 10);
@@ -314,7 +358,6 @@ scene.fog = new THREE.FogExp2( 0x000000, 0.001 );
 
 
 
-
 var moveparticles=0;//used in render to move points
 
 function render() {
@@ -333,9 +376,60 @@ function render() {
   galaxy4.rotation.z-=.003;
 
   //sun rotation
-  sun.rotation.x+=.0002;
-  sun.rotation.y+=.0002;
-  sun.rotation.z+=.0002;
+  sun.rotation.x+=.0001;
+  sun.rotation.y+=.0001;
+  sun.rotation.z+=.0001;
+
+  glow1.rotation.x+=.0001;
+  glow1.rotation.y+=.0001;
+  glow1.rotation.z+=.0001;
+
+
+  glow2.rotation.x+=.0001;
+  glow2.rotation.y+=.0001;
+  glow2.rotation.z+=.0001;
+
+
+  glow3.rotation.x+=.0001;
+  glow3.rotation.y+=.0001;
+  glow3.rotation.z+=.0001;
+
+  glow4.rotation.x+=.0001;
+  glow4.rotation.y+=.0001;
+  glow4.rotation.z+=.0001;
+
+
+  glow5.rotation.x+=.0001;
+  glow5.rotation.y+=.0001;
+  glow5.rotation.z+=.0001;
+
+
+  glow6.rotation.x+=.0001;
+  glow6.rotation.y+=.0001;
+  glow6.rotation.z+=.0001;
+
+
+  glow7.rotation.x+=.0001;
+  glow7.rotation.y+=.0001;
+  glow7.rotation.x+=.0001;
+
+
+  glow8.rotation.x-=.0001;
+  glow8.rotation.y+=.0001;
+  glow8.rotation.z+=.0001;
+
+
+  glow9.rotation.x-=.0001;
+  glow9.rotation.y-=.0001;
+  glow9.rotation.z+=.0001;
+
+
+  glow10.rotation.x-=.0001;
+  glow10.rotation.y-=.0001;
+  glow10.rotation.z-=.0001;
+
+
+
 
   //mercury rotation
   mercury.position.x = Math.sin( time * 4.5 ) * 5;
@@ -419,6 +513,8 @@ function render() {
 
   renderer.render(scene, camera);
 }
+
+
 
 
 
@@ -523,6 +619,7 @@ function zoomOut(seconds) {
 }
 
 
+
 //method to find distance bewteen two three vectors
 function distanceVector( v1, v2 )
 {
@@ -533,9 +630,3 @@ function distanceVector( v1, v2 )
     return Math.sqrt( dx * dx + dy * dy + dz * dz );
 }
 
-  var geometry = new THREE.SphereBufferGeometry( 1, 16, 16 );
-    var material = new THREE.MeshBasicMaterial( { color: 0xffffff } );
-   var lightSphere = new THREE.Mesh( geometry, material );
-    lightSphere.layers.set( 1 );
-lightsphere.position.x=10;
-     scene.add( lightSphere );
