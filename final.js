@@ -29,6 +29,7 @@ var saturntextureNORMAL = new THREE.TextureLoader().load( 'normals/saturntexture
 var uranustextureNORMAL = new THREE.TextureLoader().load( 'normals/uranustextureNORMAL.png' );
 var neptunetextureNORMAL = new THREE.TextureLoader().load( 'normals/neptunetextureNORMAL.png' );
 
+
 //basic three setup
 var scene, renderer, camera, controls;
 
@@ -45,14 +46,7 @@ document.body.appendChild(renderer.domElement);
 function Main()
 {
 
-	//used to cinematic zoom out
-	var x=0;
-	while(x<100)
-	{
-	zoomOut(10);
-	x++;
-	}
-
+	intro();
 	createLight();
 	createPlanets();
 	createBackground();
@@ -60,9 +54,20 @@ function Main()
 
 }
 
+function intro()
+{
+	for(var i=0; i<100;i++)
+	{
+		zoomOut(10);
+	}
 
+}
+
+var light1,light2,light3,light4,light5,light6,light7,light8,light9,liht10,
+light11,light12,light13,light14,light15,light16,light17,light18;
 function createLight()
 {
+	scene.add(new THREE.AmbientLight( 0x0f0f0f ));
 
 	var lightsrc = new THREE.SphereGeometry(.001, 1, 1);
 	var sunLight = new THREE.PointLight(0xffffff);
@@ -85,7 +90,6 @@ saturn, saturnring, uranus, uranusring, neptune, neptunering;
 function createPlanets()
 {
 
-
 	//sun 
 	var geometry = new THREE.SphereGeometry(3, 50, 50);
 	var material = new THREE.MeshBasicMaterial( { map: suntexture, normalMap: suntextureNORMAL} );
@@ -94,7 +98,7 @@ function createPlanets()
 
 	//outer glow for sun
 	var num=3.01;
-	var glow = new THREE.MeshBasicMaterial( { color: 0xf00000, transparent: true, opacity: 0.03 } );
+	var glow = new THREE.MeshBasicMaterial( { color: 0xf00f0f, transparent: true, opacity: 0.03 } );
 	for(var i=0;i<10;i++)
 	{
 		var sphereGeom =  new THREE.SphereGeometry( num, 100, 100 );
@@ -267,6 +271,7 @@ function createBackground()
 
 	material = new THREE.ParticleBasicMaterial( { size: 3 });
 	particles = new THREE.ParticleSystem( geometry2, material );
+
 	scene.add( particles ); 
 
 }
@@ -280,6 +285,10 @@ function render() {
   requestAnimationFrame(render);
 
   var time = Date.now() * 0.0001;
+
+   //sun lights
+ 
+ 	
 
   //galaxy rotation
   galaxy1.rotation.x+=.001;
