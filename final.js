@@ -221,7 +221,7 @@ function createPlanets()
 
 }
 
-var galaxy1, galaxy2, galaxy3, galaxy4, points;
+var galaxy1, galaxy2, galaxy3, galaxy4, points, particles;
 
 function createBackground()
 {
@@ -260,23 +260,23 @@ function createBackground()
 
 	
 
-
-
-for ( var i = 0; i < 100; i ++ ) {
-
-	var x = (Math.random()-.5)*500;
-	var y = (Math.random()-.5)*500;
-	var z = (Math.random()-.5)*500;
-  if(distanceVector(new THREE.Vector3(x,y,z), new THREE.Vector3(0,0,0))>75)
-	  {
-var geometry = new THREE.SphereGeometry(.5, 5, 5);
+var geometry = new THREE.SphereGeometry(.5, 10, 10);
 	var material = new THREE.MeshBasicMaterial( {  } );
-	test = new THREE.Mesh( geometry, material );
-	test.position.set(x, y, z);
-	test.lookAt( camera.position );
-	scene.add(test);
-	var glowMesh	= new THREEx.GeometricGlowMesh(test)
-	test.add(glowMesh.object3d)
+
+for ( var i = 0; i < 200; i ++ ) {
+
+	var x = (Math.random()-.5)*800;
+	var y = (Math.random()-.5)*800;
+	var z = (Math.random()-.5)*800;
+  if(distanceVector(new THREE.Vector3(x,y,z), new THREE.Vector3(0,0,0))>400)
+	  {
+
+	points = new THREE.Mesh( geometry, material );
+	points.position.set(x, y, z);
+	points.lookAt( camera.position );
+	scene.add(points);
+	var glowMesh	= new THREEx.GeometricGlowMesh(points)
+	points.add(glowMesh.object3d)
 }
 
 	
@@ -533,3 +533,9 @@ function distanceVector( v1, v2 )
     return Math.sqrt( dx * dx + dy * dy + dz * dz );
 }
 
+  var geometry = new THREE.SphereBufferGeometry( 1, 16, 16 );
+    var material = new THREE.MeshBasicMaterial( { color: 0xffffff } );
+   var lightSphere = new THREE.Mesh( geometry, material );
+    lightSphere.layers.set( 1 );
+lightsphere.position.x=10;
+     scene.add( lightSphere );
