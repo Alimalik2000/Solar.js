@@ -1,4 +1,5 @@
 
+
 //load all textures
 var suntexture = new THREE.TextureLoader().load( 'textures/suntexture.jpg' );
 var mercurytexture = new THREE.TextureLoader().load( 'textures/mercurytexture.jpg' );
@@ -44,14 +45,16 @@ document.body.appendChild(renderer.domElement);
 
 
 function Main()
-{
-
+{	
+	
 	intro();
 	createLight();
 	createPlanets();
 	createBackground();
 	render();
-
+	
+	
+	
 }
 
 function intro()
@@ -103,7 +106,7 @@ function createPlanets()
 	{
 		var sphereGeom =  new THREE.SphereGeometry( num, 100, 100 );
 		var sphere = new THREE.Mesh( sphereGeom, glow );
-		scene.add(sphere);
+		//scene.add(sphere);
 		num+=.07;
 	}
 
@@ -218,7 +221,7 @@ function createPlanets()
 
 }
 
-var galaxy1, galaxy2, galaxy3, galaxy4, particles;
+var galaxy1, galaxy2, galaxy3, galaxy4, points;
 
 function createBackground()
 {
@@ -253,6 +256,36 @@ function createBackground()
 	var totalObjects = 40000;
 	var container = document.createElement('div');
 	document.body.appendChild( container );
+
+
+	
+
+
+
+for ( var i = 0; i < 100; i ++ ) {
+
+	var x = (Math.random()-.5)*500;
+	var y = (Math.random()-.5)*500;
+	var z = (Math.random()-.5)*500;
+  if(distanceVector(new THREE.Vector3(x,y,z), new THREE.Vector3(0,0,0))>75)
+	  {
+var geometry = new THREE.SphereGeometry(.5, 5, 5);
+	var material = new THREE.MeshBasicMaterial( {  } );
+	test = new THREE.Mesh( geometry, material );
+	test.position.set(x, y, z);
+	test.lookAt( camera.position );
+	scene.add(test);
+	var glowMesh	= new THREEx.GeometricGlowMesh(test)
+	test.add(glowMesh.object3d)
+}
+
+	
+}
+
+var geometry2 = new THREE.Geometry();
+	var totalObjects = 40000;
+	var container = document.createElement('div');
+	document.body.appendChild( container );
 	scene.fog = new THREE.FogExp2( 0x000000, 0.001 );  
 
 	for (i = 0; i < totalObjects; i ++) 
@@ -274,12 +307,15 @@ function createBackground()
 
 	scene.add( particles ); 
 
+scene.fog = new THREE.FogExp2( 0x000000, 0.001 );  
+
+
 }
 
 
 
 
-var moveparticles=0;//used in render to move particles
+var moveparticles=0;//used in render to move points
 
 function render() {
   requestAnimationFrame(render);
@@ -360,8 +396,9 @@ function render() {
   jupiterring.rotation.z-=.0025;
   neptunering.rotation.z-=.0025;
 
-  //used to move particles slghtly
+  //used to move points slghtly
   moveparticles++;
+
 
 	 if(moveparticles<3000)
 	 {
@@ -495,3 +532,4 @@ function distanceVector( v1, v2 )
 
     return Math.sqrt( dx * dx + dy * dy + dz * dz );
 }
+
