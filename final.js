@@ -43,9 +43,7 @@ renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-	var guiDisplay = new dat.GUI({
-    height : 5 * 32 - 1
-});
+	
 
 
 
@@ -516,14 +514,18 @@ function render() {
 	 {
 	 	moveparticles=0;
 	 }
-
-
+	 
+  
   renderer.render(scene, camera);
 }
 
 
 function gui()
 {
+
+	var guiDisplay = new dat.GUI({
+    height : 5 * 32 - 1
+});
 
 	var guiElements =  new function() {
 
@@ -573,10 +575,50 @@ function gui()
 
 function focus(x)
 {
-	camera.position.set( 0, 20, 100 );
-	controls.update();
+	if(x=="sun")
+	{
+
+	}
+	else if(x=="mercury")
+	{
+
+	}
+	else if(x=="venus")
+	{
+
+	}
+	else if(x=="earth")
+	{
+		
+		
+	}
+	else if(x=="mars")
+	{
+
+	}
+	else if(x=="jupiter")
+	{
+
+	}
+	else if(x=="saturn")
+	{
+
+	}
+	else if(x=="uranus")
+	{
+
+	}
+	else if(x=="neptune")
+	{
+
+	}
+
+	
+
 
 }
+
+
 
 
 
@@ -677,6 +719,7 @@ function zoomOut(seconds) {
     	{
     		starting=false;
     		controls = new THREE.OrbitControls( camera, renderer.domElement );
+    		
     	}
         }   
     	},1)
