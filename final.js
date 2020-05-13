@@ -32,7 +32,7 @@ var neptunetextureNORMAL = new THREE.TextureLoader().load( 'normals/neptunetextu
 
 
 //basic three setup
-var scene, renderer, camera, controls;
+var scene, renderer, camera, controls, gui;
 
 scene = new THREE.Scene();
 
@@ -43,6 +43,17 @@ renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
+	var guiDisplay = new dat.GUI({
+    height : 5 * 32 - 1
+});
+
+
+
+function focus()
+{
+	console.log("reached");
+}
+
 
 function Main()
 {	
@@ -52,7 +63,10 @@ function Main()
 	createPlanets();
 	createBackground();
 	render();
+	gui();
 	
+
+
 }
 
 function intro()
@@ -101,53 +115,54 @@ function createPlanets()
 
 	//outer glow for sun
 	var op=1.2;
+	var mult=1.0;
 
-	geometry =  new THREE.SphereGeometry( 2.75, 30, 30 );
+	geometry =  new THREE.SphereGeometry( 2.75*mult, 30, 30 );
 	material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: .3*op } );
 	glow1 = new THREE.Mesh( geometry, material );
 	scene.add(glow1);
 
-	geometry =  new THREE.SphereGeometry( 2.81, 30, 30 );
+	geometry =  new THREE.SphereGeometry( 2.81*mult, 30, 30 );
 	material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: .29*op} );
 	glow2 = new THREE.Mesh( geometry, material );
 	scene.add(glow2);
 
-	geometry =  new THREE.SphereGeometry( 2.88, 30, 30 );
+	geometry =  new THREE.SphereGeometry( 2.88*mult, 30, 30 );
 	material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: .27*op } );
 	glow3 = new THREE.Mesh( geometry, material );
 	scene.add(glow3);
 
-	geometry =  new THREE.SphereGeometry( 2.96, 30, 30 );
+	geometry =  new THREE.SphereGeometry( 2.96*mult, 30, 30 );
 	material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: .24*op } );
 	glow4 = new THREE.Mesh( geometry, material );
 	scene.add(glow4);
 
-	geometry =  new THREE.SphereGeometry( 3.03, 30, 30 );
+	geometry =  new THREE.SphereGeometry( 3.03*mult, 30, 30 );
 	material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: .19*op } );
 	glow5 = new THREE.Mesh( geometry, material );
 	scene.add(glow5);
 
-	geometry =  new THREE.SphereGeometry( 3.13, 30, 30 );
+	geometry =  new THREE.SphereGeometry( 3.13*mult, 30, 30 );
 	material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: .13*op } );
 	glow6 = new THREE.Mesh( geometry, material );
 	scene.add(glow6);
 
-	geometry =  new THREE.SphereGeometry( 3.24, 30, 30 );
+	geometry =  new THREE.SphereGeometry( 3.24*mult, 30, 30 );
 	material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: .05*op } );
 	glow7 = new THREE.Mesh( geometry, material );
 	scene.add(glow7);
 
-	geometry =  new THREE.SphereGeometry( 3.36, 30, 30 );
+	geometry =  new THREE.SphereGeometry( 3.36*mult, 30, 30 );
 	material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: .01*op } );
 	glow8 = new THREE.Mesh( geometry, material );
 	scene.add(glow8);
 
-	geometry =  new THREE.SphereGeometry( 3.49, 30, 30 );
+	geometry =  new THREE.SphereGeometry( 3.49*mult, 30, 30 );
 	material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: .005*op } );
 	glow9 = new THREE.Mesh( geometry, material );
 	scene.add(glow9);
 
-	geometry =  new THREE.SphereGeometry( 3.63, 30, 30 );
+	geometry =  new THREE.SphereGeometry( 3.63*mult, 30, 30 );
 	material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: .001*op } );
 	glow10 = new THREE.Mesh( geometry, material );
 	scene.add(glow10);
@@ -269,7 +284,6 @@ var galaxy1, galaxy2, galaxy3, galaxy4, points, particles;
 
 function createBackground()
 {
-
 		//Galaxy 1
 	var geometry = new THREE.BoxGeometry(1, 100, 100);
 	var material = new THREE.MeshBasicMaterial( { map:galaxytexture1 } );
@@ -312,7 +326,7 @@ for ( var i = 0; i < 200; i ++ ) {
 	var x = (Math.random()-.5)*800;
 	var y = (Math.random()-.5)*800;
 	var z = (Math.random()-.5)*800;
-  if(distanceVector(new THREE.Vector3(x,y,z), new THREE.Vector3(0,0,0))>400)
+  if(distanceVector(new THREE.Vector3(x,y,z), new THREE.Vector3(0,0,0))>300)
 	  {
 
 	points = new THREE.Mesh( geometry, material );
@@ -365,7 +379,7 @@ function render() {
 
   var time = Date.now() * 0.0001;
 
-   //sun lights
+ 
  
  	
 
@@ -376,6 +390,10 @@ function render() {
   galaxy4.rotation.z-=.003;
 
   //sun rotation
+  sun.scale.x=.999;
+  sun.scale.y=.999;
+  sun.scale.z=.999;
+
   sun.rotation.x+=.0001;
   sun.rotation.y+=.0001;
   sun.rotation.z+=.0001;
@@ -384,11 +402,9 @@ function render() {
   glow1.rotation.y+=.0001;
   glow1.rotation.z+=.0001;
 
-
   glow2.rotation.x+=.0001;
   glow2.rotation.y+=.0001;
   glow2.rotation.z+=.0001;
-
 
   glow3.rotation.x+=.0001;
   glow3.rotation.y+=.0001;
@@ -398,38 +414,29 @@ function render() {
   glow4.rotation.y+=.0001;
   glow4.rotation.z+=.0001;
 
-
   glow5.rotation.x+=.0001;
   glow5.rotation.y+=.0001;
   glow5.rotation.z+=.0001;
-
 
   glow6.rotation.x+=.0001;
   glow6.rotation.y+=.0001;
   glow6.rotation.z+=.0001;
 
-
   glow7.rotation.x+=.0001;
   glow7.rotation.y+=.0001;
   glow7.rotation.x+=.0001;
-
 
   glow8.rotation.x-=.0001;
   glow8.rotation.y+=.0001;
   glow8.rotation.z+=.0001;
 
-
   glow9.rotation.x-=.0001;
   glow9.rotation.y-=.0001;
   glow9.rotation.z+=.0001;
 
-
   glow10.rotation.x-=.0001;
   glow10.rotation.y-=.0001;
   glow10.rotation.z-=.0001;
-
-
-
 
   //mercury rotation
   mercury.position.x = Math.sin( time * 4.5 ) * 5;
@@ -512,6 +519,63 @@ function render() {
 
 
   renderer.render(scene, camera);
+}
+
+
+function gui()
+{
+
+	var guiElements =  new function() {
+
+	  this.Sun = false;
+	  this.Mercury=false;
+	  this.Venus=false;
+	  this.Earth=false;
+	  this.Mars=false;
+	  this.Jupiter=false;
+	  this.Saturn=false;
+	  this.Uranus=false;
+	  this.Neptune=false;
+	  
+	};
+
+	 
+	 var sun1 =  guiDisplay.add(guiElements, 'Sun');
+	 sun1.onChange(function(value) {focus("sun");});
+
+	 var mercury1 =  guiDisplay.add(guiElements, 'Mercury');
+	 mercury1.onChange(function(value) {focus("mercury");});
+
+	  var venus1 =  guiDisplay.add(guiElements, 'Venus');
+	 venus1.onChange(function(value) {focus("venus");});
+
+	  var earth1 =  guiDisplay.add(guiElements, 'Earth');
+	 earth1.onChange(function(value) {focus("earth");});
+
+	 var mars1 =  guiDisplay.add(guiElements, 'Mars');
+	 mars1.onChange(function(value) {focus("mars");});
+
+	  var jupiter1 =  guiDisplay.add(guiElements, 'Jupiter');
+	 jupiter1.onChange(function(value) {focus("jupiter");});
+
+	  var saturn1 =  guiDisplay.add(guiElements, 'Saturn');
+	 saturn1.onChange(function(value) {focus("saturn");});
+
+	  var uranus1 =  guiDisplay.add(guiElements, 'Uranus');
+	 uranus1.onChange(function(value) {focus("uranus");});
+
+	  var neptune1 =  guiDisplay.add(guiElements, 'Neptune');
+	 neptune1.onChange(function(value) {focus("neptune");});
+
+
+}
+
+
+function focus(x)
+{
+	camera.position.set( 0, 20, 100 );
+	controls.update();
+
 }
 
 
