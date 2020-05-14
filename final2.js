@@ -1,4 +1,5 @@
 
+
 //load all textures
 var suntexture = new THREE.TextureLoader().load( 'textures/suntexture.jpg' );
 var mercurytexture = new THREE.TextureLoader().load( 'textures/mercurytexture.jpg' );
@@ -41,22 +42,21 @@ window.innerWidth/window.innerHeight, 0.1, 1000);
 renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
-	
 
 controls = new THREE.OrbitControls( camera, renderer.domElement );
+camera.position.z=10;
+
 
 
 function Main()
 {	
-	camera.position.z=15;
+
 	//intro();
 	createLight();
 	createPlanets();
 	createBackground();
 	render();
 	gui();
-	
-
 
 }
 
@@ -364,7 +364,6 @@ scene.fog = new THREE.FogExp2( 0x000000, 0.001 );
 
 
 var moveparticles=0;//used in render to move points
-
 var lockSun=false, lockMercury=false,lockVenus=false,lockEarth=false, lockMars=false, lockJupiter=false,lockSaturn=false,
 lockUranus=false,lockNeptune=false;
 
@@ -475,7 +474,7 @@ function render() {
   
   //saturn rotation
   saturn.position.x = saturnring.position.x = Math.sin( time * 0.3 ) * 32;
-  saturn.position.z = saturnring.position.z = -Math.cos( time * 0.3 ) * 32;
+  saturn.position.z = saturnring.position.z = Math.cos( time * 0.3 ) * 32;
   
   //uranus rotation
   uranus.position.x = uranusring.position.x = Math.sin( time * 0.2 ) * 40;
@@ -513,120 +512,70 @@ function render() {
 	 	moveparticles=0;
 	 }
 
-
-	 if(freeRoam==false)
+	 if(freeRoam==false){
+	 if(lockSun)
 	 {
-	 	if(lockSun)
-	 	{
-	 		controls.target0.set( sun.position.x, sun.position.y, sun.position.z);
-  			controls.reset();
-  			camera.position.x=sun.position.x+Math.sin(time)*18;
-  			camera.position.y=sun.position.y;
-  			camera.position.z=sun.position.z-Math.cos(time)*18;
-
-	 	}
-	 	if(lockMercury)
-	 	{
-	 		controls.target0.set( mercury.position.x, mercury.position.y, mercury.position.z);
-  			controls.reset();
-  			camera.position.x=mercury.position.x+Math.sin(time)*3;
-  			camera.position.y=mercury.position.y;
-  			camera.position.z=mercury.position.z-Math.cos(time)*3;
-
-	 	}
-	 	if(lockVenus)
-	 	{
-	 		controls.target0.set( venus.position.x, venus.position.y, venus.position.z);
-  			controls.reset();
-  			camera.position.x=venus.position.x+Math.sin(time*2)*4;
-  			camera.position.y=venus.position.y;
-  			camera.position.z=venus.position.z-Math.cos(time*2)*4;
-	 	}
-	 	if(lockEarth)
-	 	{
-	 		controls.target0.set( earth.position.x, earth.position.y, earth.position.z);
-  			controls.reset();
-  			camera.position.x=earth.position.x+Math.sin(time*2)*5;
-  			camera.position.y=earth.position.y;
-  			camera.position.z=earth.position.z-Math.cos(time*2)*5;
-	 	}
-	 	if(lockMars)
-	 	{
-	 		controls.target0.set( mars.position.x, mars.position.y, mars.position.z);
-  			controls.reset();
-  			camera.position.x=mars.position.x+Math.sin(time*2)*4;
-  			camera.position.y=mars.position.y;
-  			camera.position.z=mars.position.z-Math.cos(time*2)*4;
-	 	}
-	 	if(lockJupiter)
-	 	{
-	 		controls.target0.set( jupiter.position.x, jupiter.position.y, jupiter.position.z);
-  			controls.reset();
-  			camera.position.x=jupiter.position.x+Math.sin(time*2)*10;
-  			camera.position.y=jupiter.position.y+2;
-  			camera.position.z=jupiter.position.z-Math.cos(time*2)*10;
-	 	}
-	 	if(lockSaturn)
-	 	{
-	 		controls.target0.set( saturn.position.x, saturn.position.y, saturn.position.z);
-  			controls.reset();
-  			camera.position.x=saturn.position.x+Math.sin(time*2)*9;
-  			camera.position.y=saturn.position.y;
-  			camera.position.z=saturn.position.z-Math.cos(time*2)*9;
-	 	}
-	 	if(lockUranus)
-	 	{
-	 		controls.target0.set( uranus.position.x, uranus.position.y, uranus.position.z);
-  			controls.reset();
-  			camera.position.x=uranus.position.x+Math.sin(time*2)*9;
-  			camera.position.y=uranus.position.y;
-  			camera.position.z=uranus.position.z-Math.cos(time*2)*9;
-	 	}
-	 	if(lockNeptune)
-	 	{
-	 		controls.target0.set( neptune.position.x, neptune.position.y, neptune.position.z);
-  			controls.reset();
-  			camera.position.x=neptune.position.x+Math.sin(time*2)*9;
-  			camera.position.y=neptune.position.y;
-  			camera.position.z=neptune.position.z-Math.cos(time*2)*9;
-	 	}
-
-	 	controls.update();
+	 	
 
 	 }
-	 camera.position.z+=.0001;
+	 else if(lockMercury)
+	 {
+	 	
+	 }
+	 else if(lockVenus)
+	 {
+	 	controls.target0.set( venus.position.x, venus.position.y, venus.position.z ); // set a new target
+	
+	 }
+	 else if(lockEarth)
+	 {
+	 	controls.target0.set( earth.position.x, earth.position.y, earth.position.z ); // set a new target
+		
+	 }
+	 else if(lockMars)
+	 {
+	 	controls.target0.set( mars.position.x, mars.position.y, mars.position.z ); // set a new target
+		
+	 }
+	 else if(lockJupiter)
+	 {
+	 	controls.target0.set( jupiter.position.x, jupiter.position.y, jupiter.position.z ); // set a new target
+		
+	 }
+	  else if(lockSaturn)
+	 {
+		controls.target0.set( saturn.position.x, saturn.position.y, saturn.position.z ); // set a new target
+		
+	 }
+	  else if(lockUranus)
+	 {
+	 	controls.target0.set( uranus.position.x, uranus.position.y, uranus.position.z ); // set a new target
+		
+	 }
+	 else if(lockNeptune)
+	 {
+	 	controls.target0.set( neptune.position.x, neptune.position.y, neptune.position.z ); // set a new target
+	 }
+	 controls.reset();
+	}
+
+
+
+	 
   
   renderer.render(scene, camera);
 }
 
 
 document.addEventListener("mousedown", function(event){
-  
   if(event.button == 0){
- 
-
-
-  	
     freeRoam=true
-
-
-    lockSun=false;
-	lockMercury=false;
-	lockVenus=false;
-	lockEarth=false;
-	lockMars=false;
-	lockJupiter=false;
-	lockSaturn=false;
-	lockUranus=false;
-	lockNeptune=false;
-
   } 
 });
 
 
+var guiElements
 
-
-var guiElements;
 function gui()
 {
 
@@ -650,51 +599,42 @@ function gui()
 
 	 
 	 var sun1 =  guiDisplay.add(guiElements, 'Sun');
-	 sun1.onChange(function(value) {focus("sun");});
+	 sun1.onChange(function(value) {release("sun");guiElements.Sun=false;});
 
 	 var mercury1 =  guiDisplay.add(guiElements, 'Mercury');
-	 mercury1.onChange(function(value) {focus("mercury");});
+	 mercury1.onChange(function(value) {release("mercury");guiElements.Mercury=false;});
 
 	  var venus1 =  guiDisplay.add(guiElements, 'Venus');
-	 venus1.onChange(function(value) {focus("venus");});
+	 venus1.onChange(function(value) {release("venus");guiElements.Venus=false;});
 
 	  var earth1 =  guiDisplay.add(guiElements, 'Earth');
-	 earth1.onChange(function(value) {focus("earth");});
+	 earth1.onChange(function(value) {release("earth");guiElements.Earth=false;});
 
 	 var mars1 =  guiDisplay.add(guiElements, 'Mars');
-	 mars1.onChange(function(value) {focus("mars");});
+	 mars1.onChange(function(value) {release("mars");guiElements.Mars=false;});
 
 	  var jupiter1 =  guiDisplay.add(guiElements, 'Jupiter');
-	 jupiter1.onChange(function(value) {focus("jupiter");});
+	 jupiter1.onChange(function(value) {release("jupiter");guiElements.Jupiter=false;});
 
 	  var saturn1 =  guiDisplay.add(guiElements, 'Saturn');
-	 saturn1.onChange(function(value) {focus("saturn");});
+	 saturn1.onChange(function(value) {release("saturn");guiElements.Saturn=false;});
 
 	  var uranus1 =  guiDisplay.add(guiElements, 'Uranus');
-	 uranus1.onChange(function(value) {focus("uranus");});
+	 uranus1.onChange(function(value) {release("uranus");guiElements.Uranus=false;});
 
 	  var neptune1 =  guiDisplay.add(guiElements, 'Neptune');
-	 neptune1.onChange(function(value) {focus("neptune");});
+	 neptune1.onChange(function(value) {release("neptune");guiElements.Neptune=false;});
 
 
 }
 
-function focus(planet)
+function release(planet)
 {
+
 	freeRoam=false;
 
-	guiElements.Sun=false;
-	guiElements.Mercury=false;
-	guiElements.Venus=false;
-	guiElements.Earth=false;
-	guiElements.Mars=false;
-	guiElements.Jupiter=false;
-	guiElements.Saturn=false;
-	guiElements.Neptune=false;
-	guiElements.Uranus=false;
-
 	lockSun=false;
-	lockMercury=false;
+	lockMarcury=false;
 	lockVenus=false;
 	lockEarth=false;
 	lockMars=false;
@@ -704,18 +644,33 @@ function focus(planet)
 	lockNeptune=false;
 
 
-	if(planet=="sun")lockSun=true;
-	if(planet=="mercury")lockMercury=true;
-	if(planet=="venus")lockVenus=true;
-	if(planet=="earth")lockEarth=true;
-	if(planet=="mars")lockMars=true;
-	if(planet=="jupiter")lockJupiter=true;
-	if(planet=="saturn")lockSaturn=true;
-	if(planet=="uranus")lockUranus=true;
-	if(planet=="neptune")lockNeptune=true;
-
+	if(planet=="sun") lockSun=true;
+	 if(planet=="mercury") lockMercury=true;
+	 if(planet=="venus") lockVenus=true;
+	 if(planet=="earth") lockEarth=true;
+	if(planet=="mars") lockMars=true;
+	if(planet=="jupiter") lockJupiter=true;
+	if(planet=="saturn") lockSaturn=true;
+	if(planet=="uranus") lockUranus=true;
+	if(planet=="neptune") lockNeptune=true;
 
 }
+
+
+function clear()
+{
+	guiElements.Sun=false;
+	guiElements.Mercury=false;
+	guiElements.Venus=false;
+	guiElements.Earth=false;
+	guiElements.Mars=false;
+	guiElements.Jupiter=false;
+	guiElements.Saturn=false;
+	guiElements.Uranus=false;
+	guiElements.Neptune=false;
+}
+
+
 
 
 
@@ -832,3 +787,4 @@ function distanceVector( v1, v2 )
 
     return Math.sqrt( dx * dx + dy * dy + dz * dz );
 }
+
