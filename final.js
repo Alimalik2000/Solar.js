@@ -516,6 +516,7 @@ function render() {
 
 	 if(freeRoam==false)
 	 {
+
 	 	if(lockSun)
 	 	{
 	 		controls.target0.set( sun.position.x, sun.position.y, sun.position.z);
@@ -538,9 +539,9 @@ function render() {
 	 	{
 	 		controls.target0.set( venus.position.x, venus.position.y, venus.position.z);
   			controls.reset();
-  			camera.position.x=venus.position.x+Math.sin(time*2)*4;
+  			camera.position.x=venus.position.x+Math.sin(time*3)*4;
   			camera.position.y=venus.position.y;
-  			camera.position.z=venus.position.z-Math.cos(time*2)*4;
+  			camera.position.z=venus.position.z-Math.cos(time*3)*4;
 	 	}
 	 	if(lockEarth)
 	 	{
@@ -594,21 +595,19 @@ function render() {
 	 	controls.update();
 
 	 }
-	 camera.position.z+=.0001;
+
+
   
   renderer.render(scene, camera);
 }
 
 
 document.addEventListener("mousedown", function(event){
-  
-  if(event.button == 0){
- 
+	  
 
 
-  	
     freeRoam=true
-
+    guiElements.PLANETLOCK="          DISABLED"
 
     lockSun=false;
 	lockMercury=false;
@@ -620,9 +619,8 @@ document.addEventListener("mousedown", function(event){
 	lockUranus=false;
 	lockNeptune=false;
 
-  } 
+  
 });
-
 
 
 
@@ -636,19 +634,24 @@ function gui()
 
 	guiElements =  new function() {
 
-	  this.Sun = false;
-	  this.Mercury=false;
-	  this.Venus=false;
-	  this.Earth=false;
-	  this.Mars=false;
-	  this.Jupiter=false;
-	  this.Saturn=false;
-	  this.Uranus=false;
-	  this.Neptune=false;
-	  
+		
+	  this.PLANETLOCK = "          DISABLED";
+	
+	  this.Sun = function(){};
+	  this.Mercury= function(){};
+	  this.Venus= function(){};
+	  this.Earth= function(){};
+	  this.Mars= function(){};
+	  this.Jupiter= function(){};
+	  this.Saturn= function(){};
+	  this.Uranus= function(){};
+	  this.Neptune= function(){};
 	};
 
-	 
+
+	
+	 var PT =  guiDisplay.add(guiElements, 'PLANETLOCK').listen();
+
 	 var sun1 =  guiDisplay.add(guiElements, 'Sun');
 	 sun1.onChange(function(value) {focus("sun");});
 
@@ -675,13 +678,14 @@ function gui()
 
 	  var neptune1 =  guiDisplay.add(guiElements, 'Neptune');
 	 neptune1.onChange(function(value) {focus("neptune");});
-
-
+	 
 }
 
 function focus(planet)
 {
 	freeRoam=false;
+
+	guiElements.PLANETLOCK="          ENABLED";
 
 	guiElements.Sun=false;
 	guiElements.Mercury=false;
@@ -692,16 +696,6 @@ function focus(planet)
 	guiElements.Saturn=false;
 	guiElements.Neptune=false;
 	guiElements.Uranus=false;
-
-	lockSun=false;
-	lockMercury=false;
-	lockVenus=false;
-	lockEarth=false;
-	lockMars=false;
-	lockJupiter=false;
-	lockSaturn=false;
-	lockUranus=false;
-	lockNeptune=false;
 
 
 	if(planet=="sun")lockSun=true;
