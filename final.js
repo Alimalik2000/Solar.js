@@ -36,7 +36,6 @@ var saturntextureNORMAL = new THREE.TextureLoader().load( 'normals/saturntexture
 var uranustextureNORMAL = new THREE.TextureLoader().load( 'normals/uranustextureNORMAL.png' );
 var neptunetextureNORMAL = new THREE.TextureLoader().load( 'normals/neptunetextureNORMAL.png' );
 
-
 //html file will call main on load
 function main()
 {	
@@ -45,14 +44,15 @@ function main()
 	createSun();
 	createPlanets();
 	createBackground();
-	gui();
+	setupGui();
+	setupRaycasting();
 	render();
 
 }
 
 
 //basic three setup with orbital controls
-var scene, renderer, camera, controls, gui;
+var scene, renderer, camera, controls, gui, loader;
 
 function basicSetup()
 {
@@ -66,6 +66,8 @@ function basicSetup()
 	document.body.appendChild(renderer.domElement);
 		
 	controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+	loader = new THREE.FontLoader();
 }
 
 
@@ -405,6 +407,7 @@ lockUranus=false,lockNeptune=false;
 var freeRoam=false;
 
 function render() {
+
   requestAnimationFrame(render);
 
   var time = Date.now() * 0.0001;
@@ -644,7 +647,7 @@ function render() {
 
 //gui to lock planets
 var guiElements;
-function gui()
+function setupGui()
 {
 
 	var guiDisplay = new dat.GUI({
@@ -744,5 +747,232 @@ function distanceVector( v1 , v2 )
     var dz = v1.z - v2.z;
 
     return Math.sqrt( dx * dx + dy * dy + dz * dz );
+}
+
+
+
+
+//_____________________________________IN PROGRESS_________________________________
+
+
+var raycaster, mouse;
+
+var textMaterial;
+var textGeometry;
+
+
+function setupRaycasting()
+{
+	raycaster = new THREE.Raycaster();
+	mouse = new THREE.Vector2();
+
+	textMaterial = new THREE.MeshBasicMaterial( 
+    { color: 0xf0f0f0 }
+  );
+
+	setTimeout(function(){ hold=false; }, 100);
+
+	render2();
+}
+
+
+document.addEventListener("mousemove", function(event){
+
+	// calculate mouse position in normalized device coordinates
+	// (-1 to +1) for both components
+
+	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+});
+
+function render2() {
+	window.requestAnimationFrame(render2);
+
+	// update the picking ray with the camera and mouse position
+	raycaster.setFromCamera( mouse, camera );
+
+	// calculate objects intersecting the picking ray
+	var intersects = raycaster.intersectObjects( scene.children );
+
+	if(!hold)
+	{
+
+	for ( var i = 0; i < intersects.length; i++ ) {
+
+		if(intersects[ i ].object.id==sun.id)
+		{
+			labels("Sun");
+		}
+		else if(intersects[ i ].object.id==mercury.id)
+		{
+			labels("Mercury");
+		}
+		else if(intersects[ i ].object.id==venus.id)
+		{
+			labels("Venus");
+		}
+		else if(intersects[ i ].object.id==earth.id)
+		{
+			labels("Earth");
+		}
+		else if(intersects[ i ].object.id==earthmoon.id)
+		{
+			labels("Moon");
+		}
+		else if(intersects[ i ].object.id==mars.id)
+		{
+			labels("Mars");
+		}
+		else if(intersects[ i ].object.id==marsmoon1.id)
+		{
+			labels("Deimos");
+		}
+		else if(intersects[ i ].object.id==marsmoon2.id)
+		{
+			labels("Phobos");
+		}
+		else if(intersects[ i ].object.id==jupiter.id)
+		{
+			labels("Jupiter");
+		}
+		else if(intersects[ i ].object.id==saturn.id)
+		{
+			labels("Saturn");
+		}
+		else if(intersects[ i ].object.id==uranus.id)
+		{
+			labels("Uranus");
+		}
+		else if(intersects[ i ].object.id==neptune.id)
+		{
+			labels("Neptune");
+		}
+
+	
+
+	}
+}
+
+
+	renderer.render( scene, camera );
+
+
+
+}
+
+var hold = true;
+function labels(planet)
+{
+	hold=true;
+	setTimeout(function(){hold=false; }, 10);
+	loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+
+    textGeometry = new THREE.TextGeometry( planet, {
+
+    font: font,
+    size: .5,
+    height: .11,
+   
+
+  });
+
+});   
+
+  var mesh = new THREE.Mesh( textGeometry, textMaterial );
+ 
+
+  if(planet=="Sun")
+  {
+  	mesh.position.y+=3.5;
+  	sun.add(mesh);
+  	 mesh.lookAt( camera.position );
+  	setTimeout(function(){ sun.remove(mesh);}, 200);
+  }
+  else if(planet=="Mercury")
+  {
+  	mesh.position.y+=.5;
+  	mercury.add(mesh);
+  	mesh.lookAt( camera.position );
+  	setTimeout(function(){ mercury.remove(mesh);}, 200);
+  }
+  else if(planet=="Venus")
+  {
+
+  	mesh.position.y+=.5;
+  	venus.add(mesh);
+  	mesh.lookAt( camera.position );
+  	setTimeout(function(){ venus.remove(mesh);}, 200);
+
+  }
+  else if(planet=="Earth")
+  {
+  	mesh.position.y+=1;
+  	earth.add(mesh);
+  	mesh.lookAt( camera.position );
+  	setTimeout(function(){ earth.remove(mesh);}, 200);
+  }
+  else if(planet=="Moon")
+  {
+	mesh.position.y+=.5;
+  	earthmoon.add(mesh);
+  	mesh.lookAt( camera.position );
+  	setTimeout(function(){ earthmoon.remove(mesh);}, 200);
+  }
+  else if(planet=="Mars")
+  {
+  	mesh.position.y+=1;
+  	mars.add(mesh);
+  	mesh.lookAt( camera.position );
+  	setTimeout(function(){ mars.remove(mesh);}, 200);
+  }
+  else if(planet=="Deimos")
+  {
+  	mesh.position.y+=.5;
+  	marsmoon1.add(mesh);
+  	mesh.lookAt( camera.position );
+  	setTimeout(function(){ marsmoon1.remove(mesh);}, 200);
+  }
+  else if(planet=="Phobos")
+  {
+  	mesh.position.y+=.5;
+  	marsmoon2.add(mesh);
+  	mesh.lookAt( camera.position );
+  	setTimeout(function(){ marsmoon2.remove(mesh);}, 200);
+
+  }
+  else if(planet=="Jupiter")
+  {
+  	mesh.position.y+=1;
+  	jupiter.add(mesh);
+  	mesh.lookAt( camera.position );
+  	setTimeout(function(){ jupiter.remove(mesh);}, 200);
+  }
+  else if(planet=="Saturn")
+  {
+  	mesh.position.y+=1;
+  	saturn.add(mesh);
+  	mesh.lookAt( camera.position );
+  	setTimeout(function(){ saturn.remove(mesh);}, 200);
+  }
+  else if(planet=="Neptune")
+  {
+  	mesh.position.y+=.5;
+  	neptune.add(mesh);
+  	mesh.lookAt( camera.position );
+  	setTimeout(function(){ neptune.remove(mesh);}, 200);
+  }
+  else if(planet=="Uranus")
+  {
+  	mesh.position.y+=.5;
+  	uranus.add(mesh);
+  	mesh.lookAt( camera.position );
+  	setTimeout(function(){ uranus.remove(mesh);}, 200);
+  }
+ 
+
+
+  
+
 }
 
