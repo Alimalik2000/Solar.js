@@ -30,53 +30,47 @@ var uranustextureNORMAL = new THREE.TextureLoader().load( 'normals/uranustexture
 var neptunetextureNORMAL = new THREE.TextureLoader().load( 'normals/neptunetextureNORMAL.png' );
 
 
-//basic three setup
-var scene, renderer, camera, controls, gui;
-
-scene = new THREE.Scene();
-
-camera = new THREE.PerspectiveCamera(45,
-window.innerWidth/window.innerHeight, 0.1, 1000);
-
-renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
-	
-
-controls = new THREE.OrbitControls( camera, renderer.domElement );
-
-
+//html file will call Main on load
 function Main()
 {	
-	camera.position.z=15;
-	//intro();
+	basicSetup();
 	createLight();
+	createSun();
 	createPlanets();
 	createBackground();
-	render();
 	gui();
-	
-
+	render();
 
 }
 
-function intro()
+
+//basic three setup with orbital controls
+var scene, renderer, camera, controls, gui;
+
+function basicSetup()
 {
-	for(var i=0; i<100;i++)
-	{
-		zoomOut(10);
-	}
+	scene = new THREE.Scene();
 
+	camera = new THREE.PerspectiveCamera(45,
+	window.innerWidth/window.innerHeight, 0.1, 1000);
+
+	renderer = new THREE.WebGLRenderer();
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	document.body.appendChild(renderer.domElement);
+		
+	controls = new THREE.OrbitControls( camera, renderer.domElement );
 }
 
-var light1,light2,light3,light4,light5,light6,light7,light8,light9,liht10,
-light11,light12,light13,light14,light15,light16,light17,light18;
+
+//creates only point of light in scene, from inside of the sun
+//as well as a low ambiance
 function createLight()
 {
 	scene.add(new THREE.AmbientLight( 0x0f0f0f ));
 
 	var lightsrc = new THREE.SphereGeometry(.001, 1, 1);
 	var sunLight = new THREE.PointLight(0xffffff);
+
 	sunLight.position.set(0, 0, 0); 
 	sunLight.castShadow = true; 
 	sunLight.shadowMapWidth = 1024; 
@@ -90,12 +84,10 @@ function createLight()
 }
 
 
-var sun, mercury,venus, earth, earthmoon, mars, marsmoon1, marsmoon2, jupiter, jupiterring,
-saturn, saturnring, uranus, uranusring, neptune, neptunering;
+//creates the sun in the scene and 10 glowing layers around it
+var sun, glow1,glow2,glow3,glow4,glow5,glow6,glow7,glow7,glow9,glow10;
 
-var glow1,glow2,glow3,glow4,glow5,glow6,glow7,glow7,glow9,glow10;
-
-function createPlanets()
+function createSun()
 {
 
 	//sun 
@@ -158,7 +150,15 @@ function createPlanets()
 	glow10 = new THREE.Mesh( geometry, material );
 	scene.add(glow10);
 
+}
 
+
+//creates all planets in the scene and their rings
+var sun, mercury,venus, earth, earthmoon, mars, marsmoon1, marsmoon2, jupiter, jupiterring,
+saturn, saturnring, uranus, uranusring, neptune, neptunering;
+
+function createPlanets()
+{
 
 	//Mercury
 	geometry = new THREE.SphereGeometry(0.3, 10, 10);
@@ -271,11 +271,12 @@ function createPlanets()
 
 }
 
-var galaxy1, galaxy2, galaxy3, galaxy4, points, particles;
+//creates background of scene, stars and galaxies
+var galaxy1, galaxy2, galaxy3, galaxy4, bluestars, particles;
 
 function createBackground()
 {
-		//Galaxy 1
+	//Galaxy 1
 	var geometry = new THREE.BoxGeometry(1, 100, 100);
 	var material = new THREE.MeshBasicMaterial( { map:galaxytexture1 } );
 	galaxy1 = new THREE.Mesh( geometry, material );
@@ -300,84 +301,72 @@ function createBackground()
 	galaxy4.rotation.y-=50;
 	scene.add(galaxy4);
 
-	//stars
-	var geometry2 = new THREE.Geometry();
-	var totalObjects = 40000;
-	var container = document.createElement('div');
-	document.body.appendChild( container );
-
-
-	
-
-var geometry = new THREE.SphereGeometry(.5, 10, 10);
+	//blue stars
+	var geometry = new THREE.SphereGeometry(.5, 10, 10);
 	var material = new THREE.MeshBasicMaterial( {  } );
 
-for ( var i = 0; i < 200; i ++ ) {
+	for ( var i = 0; i < 200; i ++ ) 
+	{
 
-	var x = (Math.random()-.5)*800;
-	var y = (Math.random()-.5)*800;
-	var z = (Math.random()-.5)*800;
-  if(distanceVector(new THREE.Vector3(x,y,z), new THREE.Vector3(0,0,0))>300)
-	  {
+		var x = (Math.random()-.5)*800;
+		var y = (Math.random()-.5)*800;
+		var z = (Math.random()-.5)*800;
+	  
+	  	//if distance from star to sun is greater than 255, create it
+	  	if(distanceVector(new THREE.Vector3(x,y,z), new THREE.Vector3(0,0,0))>225)
+		{
 
-	points = new THREE.Mesh( geometry, material );
-	points.position.set(x, y, z);
-	points.lookAt( camera.position );
-	scene.add(points);
-	var glowMesh	= new THREEx.GeometricGlowMesh(points)
-	points.add(glowMesh.object3d)
-}
+			bluestars = new THREE.Mesh( geometry, material );
+			bluestars.position.set(x, y, z);
+			scene.add(bluestars);
+			var glowMesh	= new THREEx.GeometricGlowMesh(bluestars)
+			bluestars.add(glowMesh.object3d)
 
-	
-}
+		}
+	}
 
-var geometry2 = new THREE.Geometry();
-	var totalObjects = 40000;
-	var container = document.createElement('div');
-	document.body.appendChild( container );
+	//white stars
+	var geometry2 = new THREE.Geometry();
 	scene.fog = new THREE.FogExp2( 0x000000, 0.001 );  
 
-	for (i = 0; i < totalObjects; i ++) 
+	for (i = 0; i < 10000; i ++) 
 	{ 
-	  var vertex = new THREE.Vector3();
-	  vertex.x = (Math.random()-.5)*2000;
-	  vertex.y = (Math.random()-.5)*2000;
-	  vertex.z = (Math.random()-.5)*20000;
+		  var vertex = new THREE.Vector3();
+		  vertex.x = (Math.random()-.5)*2000;
+		  vertex.y = (Math.random()-.5)*2000;
+		  vertex.z = (Math.random()-.5)*2000;
 
-	  if(distanceVector(vertex, new THREE.Vector3(0,0,0))>150)
-	  {
-		geometry2.vertices.push( vertex );
-	  }
-	  
-	}
+		  //if distance from star to sun is greater than 255, create it
+		  if(distanceVector(vertex, new THREE.Vector3(0,0,0))>250)
+		  {
+				geometry2.vertices.push( vertex );
+		  }
+		}
 
 	material = new THREE.ParticleBasicMaterial( { size: 3 });
 	particles = new THREE.ParticleSystem( geometry2, material );
-
 	scene.add( particles ); 
-
-scene.fog = new THREE.FogExp2( 0x000000, 0.001 );  
-
 
 }
 
 
+//moves planets in orbit, plus rotates and spins them, also moves star
+//position slightly, also locks camera to planets if clicked in gui
 
-var moveparticles=0;//used in render to move points
+//used in render to move white stars
+var moveparticles=0;
 
-var lockSun=false, lockMercury=false,lockVenus=false,lockEarth=false, lockMars=false, lockJupiter=false,lockSaturn=false,
+//planet locks
+var lockSun=true, lockMercury=false,lockVenus=false,lockEarth=false, lockMars=false, lockJupiter=false,lockSaturn=false,
 lockUranus=false,lockNeptune=false;
 
-var freeRoam=true;
+//true is camera is not locked on a planet from gui, false otherwise
+var freeRoam=false;
 
 function render() {
   requestAnimationFrame(render);
 
   var time = Date.now() * 0.0001;
-
- 
- 
- 	
 
   //galaxy rotation
   galaxy1.rotation.x+=.001;
@@ -493,9 +482,8 @@ function render() {
   jupiterring.rotation.z-=.0025;
   neptunering.rotation.z-=.0025;
 
-  //used to move points slghtly
+  //star position change, moves slightly both ways on x axis
   moveparticles++;
-
 
 	 if(moveparticles<3000)
 	 {
@@ -513,7 +501,7 @@ function render() {
 	 	moveparticles=0;
 	 }
 
-
+	 //planet lock system
 	 if(freeRoam==false)
 	 {
 
@@ -521,9 +509,9 @@ function render() {
 	 	{
 	 		controls.target0.set( sun.position.x, sun.position.y, sun.position.z);
   			controls.reset();
-  			camera.position.x=sun.position.x+Math.sin(time)*18;
+  			camera.position.x=sun.position.x+Math.sin(time)*21;
   			camera.position.y=sun.position.y;
-  			camera.position.z=sun.position.z-Math.cos(time)*18;
+  			camera.position.z=sun.position.z-Math.cos(time)*21;
 
 	 	}
 	 	if(lockMercury)
@@ -593,50 +581,26 @@ function render() {
 	 	}
 
 	 	controls.update();
-
+	 
 	 }
-
-
   
   renderer.render(scene, camera);
 }
 
 
-document.addEventListener("mousedown", function(event){
-	  
 
-
-    freeRoam=true
-    guiElements.PLANETLOCK="          DISABLED"
-
-    lockSun=false;
-	lockMercury=false;
-	lockVenus=false;
-	lockEarth=false;
-	lockMars=false;
-	lockJupiter=false;
-	lockSaturn=false;
-	lockUranus=false;
-	lockNeptune=false;
-
-  
-});
-
-
-
+//gui to lock planets
 var guiElements;
 function gui()
 {
 
 	var guiDisplay = new dat.GUI({
     height : 5 * 32 - 1
-});
+	});
 
 	guiElements =  new function() {
-
 		
-	  this.PLANETLOCK = "          DISABLED";
-	
+	  this.PLANETLOCK = "          ENABLED";
 	  this.Sun = function(){};
 	  this.Mercury= function(){};
 	  this.Venus= function(){};
@@ -646,9 +610,8 @@ function gui()
 	  this.Saturn= function(){};
 	  this.Uranus= function(){};
 	  this.Neptune= function(){};
+
 	};
-
-
 	
 	 var PT =  guiDisplay.add(guiElements, 'PLANETLOCK').listen();
 
@@ -681,23 +644,13 @@ function gui()
 	 
 }
 
+//when a planet is chosen on gui, it is locked and all other planets are unlocked
+//freeroam is then set to false
 function focus(planet)
 {
 	freeRoam=false;
 
 	guiElements.PLANETLOCK="          ENABLED";
-
-	guiElements.Sun=false;
-	guiElements.Mercury=false;
-	guiElements.Venus=false;
-	guiElements.Earth=false;
-	guiElements.Mars=false;
-	guiElements.Jupiter=false;
-	guiElements.Saturn=false;
-	guiElements.Neptune=false;
-	guiElements.Uranus=false;
-
-
 	if(planet=="sun")lockSun=true;
 	if(planet=="mercury")lockMercury=true;
 	if(planet=="venus")lockVenus=true;
@@ -708,117 +661,30 @@ function focus(planet)
 	if(planet=="uranus")lockUranus=true;
 	if(planet=="neptune")lockNeptune=true;
 
-
 }
 
 
+//if a user choose to use orbtal controls, planetlock is disabled
+document.addEventListener("mousedown", function(event){
 
+    freeRoam=true
 
-var seconds = 0;
-var interval ;
-var starting=true;
-var reverse=false;
-function zoomOut(seconds) { 
-
-	camera.position.z=4;
+    guiElements.PLANETLOCK="          DISABLED"
+    lockSun=false;
+	lockMercury=false;
+	lockVenus=false;
+	lockEarth=false;
+	lockMars=false;
+	lockJupiter=false;
+	lockSaturn=false;
+	lockUranus=false;
+	lockNeptune=false;
   
-  interval = setInterval(function() {
-    clearInterval(interval);      
-    if(starting) 
-    {    
-    	if(reverse==false&&camera.position.z<7)
-    	{
-    		camera.position.z+=.0009;
-    		scene.rotation.y+=.00005;
-    	}
-    	else if(reverse==false&&camera.position.z<15)
-    	{
-    		{
-    		camera.position.z+=.00085;
-    		scene.rotation.y+=.000045;
-    		}
-    	}
-    	else if(reverse==false&&camera.position.z<25)
-    	{
-    		{
-    		camera.position.z+=.0008;
-    		scene.rotation.y+=.00004;
-    		}
-    	}
-    	else if(reverse==false&&camera.position.z<35)
-    	{
-    		{
-    		camera.position.z+=.00075;
-    		scene.rotation.y+=.000035;
-    		}
-    	}
-    	else if(reverse==false&&camera.position.z<45)
-    	{
-    		{
-    		camera.position.z+=.00070;
-    		scene.rotation.y+=.00003;
-    		}
-    	}
-    	else if(reverse==false&&camera.position.z<55)
-    	{
-    		{
-    		camera.position.z+=.00065;
-    		scene.rotation.y+=.000025;
-    		}
-    	}
-    	else if(reverse==false&&camera.position.z<65)
-    	{
-    		{
-    		camera.position.z+=.00060;
-    		scene.rotation.y+=.00002;
-    		}
-    	}
-    	else if(reverse==false&&camera.position.z<75)
-    	{
-    		{
-    		camera.position.z+=.00055;
-    		scene.rotation.y+=.000015;
-
-    		if(camera.position.z<76)
-    		{
-    			reverse=true;
-    		}
-    	}
-    		}
-    	else if(reverse==true&&camera.position.z>70)
-    	{
-    		camera.position.z-=.00050;
-    		scene.rotation.y+=.000015;
-    	}
-    	else if(reverse==true&&camera.position.z>60)
-    	{
-    		camera.position.z-=.00045;
-    	scene.rotation.y+=.000010;
-    	}
-    	else if(reverse==true&&camera.position.z>50)
-    	{
-    		camera.position.z-=.00040;
-    		scene.rotation.y+=.000005;
-    	}
-    	else if(reverse==true&&camera.position.z>40)
-    	{
-    		camera.position.z-=.00035;
-    		scene.rotation.y+=.0000025;
-    	}
-    	else
-    	{
-    		starting=false;
-    		controls = new THREE.OrbitControls( camera, renderer.domElement );
-    		
-    	}
-        }   
-    	},1)
-}
+});
 
 
-
-//method to find distance bewteen two three vectors
-function distanceVector( v1, v2 )
+//helper method to find distance bewteen two vectors of size three
+function distanceVector( v1 , v2 )
 {
     var dx = v1.x - v2.x;
     var dy = v1.y - v2.y;
@@ -826,3 +692,4 @@ function distanceVector( v1, v2 )
 
     return Math.sqrt( dx * dx + dy * dy + dz * dz );
 }
+
