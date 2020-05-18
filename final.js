@@ -4,6 +4,7 @@ var suntexture = new THREE.TextureLoader().load( 'textures/suntexture.jpg' );
 var mercurytexture = new THREE.TextureLoader().load( 'textures/mercurytexture.jpg' );
 var venustexture = new THREE.TextureLoader().load( 'textures/venustexture.jpg' );
 var earthtexture = new THREE.TextureLoader().load( 'textures/earthtexture.jpg' );
+var earthcloudmesh = new THREE.TextureLoader().load( 'textures/earthcloudmap.jpg' );
 var earthmoontexture = new THREE.TextureLoader().load( 'textures/earthmoontexture.jpg' );
 var marstexture = new THREE.TextureLoader().load( 'textures/marstexture.jpg' );
 var marsmoon1texture = new THREE.TextureLoader().load( 'textures/marsmoon1texture.jpg' );
@@ -30,8 +31,8 @@ var uranustextureNORMAL = new THREE.TextureLoader().load( 'normals/uranustexture
 var neptunetextureNORMAL = new THREE.TextureLoader().load( 'normals/neptunetextureNORMAL.png' );
 
 
-//html file will call Main on load
-function Main()
+//html file will call main on load
+function main()
 {	
 	basicSetup();
 	createLight();
@@ -154,7 +155,7 @@ function createSun()
 
 
 //creates all planets in the scene and their rings
-var sun, mercury,venus, earth, earthmoon, mars, marsmoon1, marsmoon2, jupiter, jupiterring,
+var sun, mercury,venus, earth, earthmoon, cloudmesh, mars, marsmoon1, marsmoon2, jupiter, jupiterring,
 saturn, saturnring, uranus, uranusring, neptune, neptunering;
 
 function createPlanets()
@@ -187,6 +188,14 @@ function createPlanets()
 	earthmoon = new THREE.Mesh( geometry, material );
 	earthmoon.position.set(20, .25, -20);
 	scene.add(earthmoon);
+
+	//earth clouds
+	geometry   = new THREE.SphereGeometry(.61, 20, 20)
+	material  = new THREE.MeshPhongMaterial({map :earthcloudmesh,
+  	opacity     : 0.2, transparent : true,
+	})
+	cloudmesh = new THREE.Mesh(geometry, material)
+	earth.add(cloudmesh)
 
 	//Mars
 	geometry = new THREE.SphereGeometry(0.5, 20, 20);
@@ -441,6 +450,9 @@ function render() {
   earthmoon.position.x = earth.position.x+Math.sin( time * 1.1 ) * 1.5;
   earthmoon.position.z = earth.position.z-Math.cos( time * 1.1 ) * 1.5;
   earthmoon.rotation.y-=.001;
+
+  //earth cloudmap rotation
+  cloudmesh.rotation.y+=.001;
 
   //mars rotation
   mars.position.x = Math.sin( time * 1 ) * 18;
