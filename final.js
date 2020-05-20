@@ -1,4 +1,3 @@
-
 //load all textures
 var suntexture = new THREE.TextureLoader().load( 'textures/suntexture.jpg' );
 var mercurytexture = new THREE.TextureLoader().load( 'textures/mercurytexture.jpg' );
@@ -45,6 +44,7 @@ function main()
 	createPlanets();
 	createBackground();
 	setupGui();
+	setupPlanetText();
 	setupRaycasting();
 	render();
 
@@ -639,6 +639,11 @@ function render() {
 	 	controls.update();
 	 
 	 }
+
+
+
+
+
   
   renderer.render(scene, camera);
 }
@@ -725,6 +730,7 @@ document.addEventListener("mousedown", function(event){
 
     freeRoam=true
 
+
     guiElements.PLANETLOCK="          DISABLED"
     lockSun=false;
 	lockMercury=false;
@@ -754,32 +760,185 @@ function distanceVector( v1 , v2 )
 
 //_____________________________________IN PROGRESS_________________________________
 
+var suntext, mercurytext, venustext, earthtext, earthmoontext,marstext,marsmoon1text,marsmoon2text,
+jupitertext,saturntext,uranustext,neptunenext;
+
+function setupPlanetText()
+{
+	var textMaterial = new THREE.MeshBasicMaterial( 
+    { color: 0xffffff,transparent: true }
+  );
+
+	var textGeometry;
+	
+  loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	    textGeometry = new THREE.TextGeometry( "Sun", {font: font,
+	    size: 1,
+	    height: .1,
+	    curveSegments: 5,
+	  });
+	  suntext = new THREE.Mesh( textGeometry, textMaterial );
+	  suntext.position.y+=3.5;
+	  suntext.lookAt(camera.position);
+	  sun.add( suntext );
+	  suntext.visible=false;
+	});   
+
+   loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	    textGeometry = new THREE.TextGeometry( "Mercury", {font: font,
+	    size: 1,
+	    height: .1,
+	    curveSegments: 5,
+	  });
+	  mercurytext = new THREE.Mesh( textGeometry, textMaterial );
+	  mercurytext.position.y+=3.5;
+	  mercury.add( mercurytext );
+	  mercurytext.visible=false;
+	});   
+
+    loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	    textGeometry = new THREE.TextGeometry( "Venus", {font: font,
+	    size: 1,
+	    height: .1,
+	    curveSegments: 5,
+	  });
+	  venustext = new THREE.Mesh( textGeometry, textMaterial );
+	  venustext.position.y+=3.5;
+	  venus.add( venustext );
+	  venustext.visible=false;
+	});   
+
+	 loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	    textGeometry = new THREE.TextGeometry( "Earth", {font: font,
+	    size: 1,
+	    height: .1,
+	    curveSegments: 5,
+	  });
+	  earthtext = new THREE.Mesh( textGeometry, textMaterial );
+	  earthtext.position.y+=3.5;
+	  earth.add( earthtext );
+	  earthtext.visible=false;
+	});   
+
+	  loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	    textGeometry = new THREE.TextGeometry( "Moon", {font: font,
+	    size: 1,
+	    height: .1,
+	    curveSegments: 5,
+	  });
+	  earthmoontext = new THREE.Mesh( textGeometry, textMaterial );
+	  earthmoontext.position.y+=3.5;
+	  earthmoon.add( earthmoontext );
+	  earthmoontext.visible=false;
+	});   
+
+	   loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	    textGeometry = new THREE.TextGeometry( "Mars", {font: font,
+	    size: 1,
+	    height: .1,
+	    curveSegments: 5,
+	  });
+	  marstext = new THREE.Mesh( textGeometry, textMaterial );
+	  marstext.position.y+=3.5;
+	  mars.add( marstext );
+	  marstext.visible=false;
+	});   
+
+	    loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	    textGeometry = new THREE.TextGeometry( "Phobos", {font: font,
+	    size: 1,
+	    height: .1,
+	    curveSegments: 5,
+	  });
+	  marsmoon1text = new THREE.Mesh( textGeometry, textMaterial );
+	  marsmoon1text.position.y+=3.5;
+	  marsmoon1.add( marsmoon1text );
+	  marsmoon1text.visible=false;
+	});
+
+	 loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	    textGeometry = new THREE.TextGeometry( "Deimos", {font: font,
+	    size: 1,
+	    height: .1,
+	    curveSegments: 5,
+	  });
+	  marsmoon2text = new THREE.Mesh( textGeometry, textMaterial );
+	  marsmoon2text.position.y+=3.5;
+	  marsmoon2.add( marsmoon2text );
+	  marsmoon2text.visible=false;
+	});    
+
+	  loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	    textGeometry = new THREE.TextGeometry( "Jupiter", {font: font,
+	    size: 1,
+	    height: .1,
+	    curveSegments: 5,
+	  });
+	  jupitertext = new THREE.Mesh( textGeometry, textMaterial );
+	  jupitertext.position.y+=3.5;
+	  jupiter.add( jupitertext );
+	  jupitertext.visible=false;
+	});   
+
+	   loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	    textGeometry = new THREE.TextGeometry( "Saturn", {font: font,
+	    size: 1,
+	    height: .1,
+	    curveSegments: 5,
+	  });
+	  saturntext = new THREE.Mesh( textGeometry, textMaterial );
+	  saturntext.position.y+=3.5;
+	  saturn.add( saturntext );
+	  saturntext.visible=false;
+	});
+
+	    loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	    textGeometry = new THREE.TextGeometry( "Uranus", {font: font,
+	    size: 1,
+	    height: .1,
+	    curveSegments: 5,
+	  });
+	  uranustext = new THREE.Mesh( textGeometry, textMaterial );
+	  uranustext.position.y+=3.5;
+	  uranus.add( uranustext );
+	  uranustext.visible=false;
+	});   
+
+	     loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	    textGeometry = new THREE.TextGeometry( "Neptune", {font: font,
+	    size: 1,
+	    height: .1,
+	    curveSegments: 5,
+	  });
+	  neptunetext = new THREE.Mesh( textGeometry, textMaterial );
+	  neptunetext.position.y+=3.5;
+	  neptune.add( neptunetext );
+	  neptunetext.visible=false;
+	});   
+
+
+
+
+
+}
+
+
+
+
+
 
 var raycaster, mouse;
-
-var textMaterial;
-var textGeometry;
-
 
 function setupRaycasting()
 {
 	raycaster = new THREE.Raycaster();
 	mouse = new THREE.Vector2();
 
-	textMaterial = new THREE.MeshBasicMaterial( 
-    { color: 0xf0f0f0 }
-  );
-
-	setTimeout(function(){ hold=false; }, 100);
-
 	render2();
 }
 
 
 document.addEventListener("mousemove", function(event){
-
-	// calculate mouse position in normalized device coordinates
-	// (-1 to +1) for both components
 
 	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
@@ -795,65 +954,88 @@ function render2() {
 	// calculate objects intersecting the picking ray
 	var intersects = raycaster.intersectObjects( scene.children );
 
-	if(!hold)
-	{
+	
 
 	for ( var i = 0; i < intersects.length; i++ ) {
 
 		if(intersects[ i ].object.id==sun.id)
 		{
-			labels("Sun");
+			suntext.lookAt(camera.position);
+  			suntext.visible=true;
+  			setTimeout(function(){ suntext.visible=false }, 100);
 		}
 		else if(intersects[ i ].object.id==mercury.id)
 		{
-			labels("Mercury");
+			mercurytext.lookAt(camera.position);
+  			mercurytext.visible=true;
+  			setTimeout(function(){ mercurytext.visible=false }, 100);
 		}
 		else if(intersects[ i ].object.id==venus.id)
 		{
-			labels("Venus");
+			venustext.lookAt(camera.position);
+  			venustext.visible=true;
+  			setTimeout(function(){ venustext.visible=false }, 100);
 		}
 		else if(intersects[ i ].object.id==earth.id)
 		{
-			labels("Earth");
+			earthtext.lookAt(camera.position);
+  			earthtext.visible=true;
+  			setTimeout(function(){ earthtext.visible=false }, 100);
 		}
 		else if(intersects[ i ].object.id==earthmoon.id)
 		{
-			labels("Moon");
+			earthmoon.lookAt(camera.position);
+  			earthmoon.visible=true;
+  			setTimeout(function(){ earthmoon.visible=false }, 100);
 		}
 		else if(intersects[ i ].object.id==mars.id)
 		{
-			labels("Mars");
+			marstext.lookAt(camera.position);
+  			marstext.visible=true;
+  			setTimeout(function(){ marstext.visible=false }, 100);
 		}
 		else if(intersects[ i ].object.id==marsmoon1.id)
 		{
-			labels("Deimos");
+			marsmoon1text.lookAt(camera.position);
+  			marsmoon1text.visible=true;
+  			setTimeout(function(){ marsmoon1text.visible=false }, 100);
 		}
 		else if(intersects[ i ].object.id==marsmoon2.id)
 		{
-			labels("Phobos");
+			marsmoon2.lookAt(camera.position);
+  			marsmoon2.visible=true;
+  			setTimeout(function(){ marsmoon2text.visible=false }, 100);
 		}
 		else if(intersects[ i ].object.id==jupiter.id)
 		{
-			labels("Jupiter");
+			jupitertext.lookAt(camera.position);
+  			jupitertext.visible=true;
+  			setTimeout(function(){ jupitertext.visible=false }, 100);
 		}
 		else if(intersects[ i ].object.id==saturn.id)
 		{
-			labels("Saturn");
+			saturntext.lookAt(camera.position);
+  			saturntext.visible=true;
+  			setTimeout(function(){ saturntext.visible=false }, 100);
 		}
 		else if(intersects[ i ].object.id==uranus.id)
 		{
-			labels("Uranus");
+			uranustext.lookAt(camera.position);
+  			uranustext.visible=true;
+  			setTimeout(function(){ uranustext.visible=false }, 100);
 		}
 		else if(intersects[ i ].object.id==neptune.id)
 		{
-			labels("Neptune");
+			neptunetext.lookAt(camera.position);
+  			neptunetext.visible=true;
+  			setTimeout(function(){ neptunetext.visible=false }, 100);
 		}
 
 	
 
-	}
+	
 }
-
+	
 
 	renderer.render( scene, camera );
 
@@ -861,113 +1043,74 @@ function render2() {
 
 }
 
+
+
+
+
+
+
+
+
+
 var hold = true;
 function labels(planet)
 {
-	hold=true;
-	setTimeout(function(){hold=false; }, 10);
-	loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	
 
-    textGeometry = new THREE.TextGeometry( planet, {
-
-    font: font,
-    size: .5,
-    height: .11,
-   
-
-  });
-
-});   
-
-  var mesh = new THREE.Mesh( textGeometry, textMaterial );
+  
  
 
   if(planet=="Sun")
   {
-  	mesh.position.y+=3.5;
-  	sun.add(mesh);
-  	 mesh.lookAt( camera.position );
-  	setTimeout(function(){ sun.remove(mesh);}, 200);
+
+  
   }
   else if(planet=="Mercury")
   {
-  	mesh.position.y+=.5;
-  	mercury.add(mesh);
-  	mesh.lookAt( camera.position );
-  	setTimeout(function(){ mercury.remove(mesh);}, 200);
+
+  	
   }
   else if(planet=="Venus")
   {
 
-  	mesh.position.y+=.5;
-  	venus.add(mesh);
-  	mesh.lookAt( camera.position );
-  	setTimeout(function(){ venus.remove(mesh);}, 200);
-
+  
   }
   else if(planet=="Earth")
   {
-  	mesh.position.y+=1;
-  	earth.add(mesh);
-  	mesh.lookAt( camera.position );
-  	setTimeout(function(){ earth.remove(mesh);}, 200);
+  
   }
   else if(planet=="Moon")
   {
-	mesh.position.y+=.5;
-  	earthmoon.add(mesh);
-  	mesh.lookAt( camera.position );
-  	setTimeout(function(){ earthmoon.remove(mesh);}, 200);
+	
   }
   else if(planet=="Mars")
   {
-  	mesh.position.y+=1;
-  	mars.add(mesh);
-  	mesh.lookAt( camera.position );
-  	setTimeout(function(){ mars.remove(mesh);}, 200);
+  
   }
   else if(planet=="Deimos")
   {
-  	mesh.position.y+=.5;
-  	marsmoon1.add(mesh);
-  	mesh.lookAt( camera.position );
-  	setTimeout(function(){ marsmoon1.remove(mesh);}, 200);
+  
   }
   else if(planet=="Phobos")
   {
-  	mesh.position.y+=.5;
-  	marsmoon2.add(mesh);
-  	mesh.lookAt( camera.position );
-  	setTimeout(function(){ marsmoon2.remove(mesh);}, 200);
+  	
 
   }
   else if(planet=="Jupiter")
   {
-  	mesh.position.y+=1;
-  	jupiter.add(mesh);
-  	mesh.lookAt( camera.position );
-  	setTimeout(function(){ jupiter.remove(mesh);}, 200);
+  	
   }
   else if(planet=="Saturn")
   {
-  	mesh.position.y+=1;
-  	saturn.add(mesh);
-  	mesh.lookAt( camera.position );
-  	setTimeout(function(){ saturn.remove(mesh);}, 200);
+  	
   }
   else if(planet=="Neptune")
   {
-  	mesh.position.y+=.5;
-  	neptune.add(mesh);
-  	mesh.lookAt( camera.position );
-  	setTimeout(function(){ neptune.remove(mesh);}, 200);
+  	
   }
   else if(planet=="Uranus")
   {
-  	mesh.position.y+=.5;
-  	uranus.add(mesh);
-  	mesh.lookAt( camera.position );
-  	setTimeout(function(){ uranus.remove(mesh);}, 200);
+  
   }
  
 
@@ -975,4 +1118,3 @@ function labels(planet)
   
 
 }
-
