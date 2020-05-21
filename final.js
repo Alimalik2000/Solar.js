@@ -13,10 +13,11 @@ var marsmoon2texture = new THREE.TextureLoader().load( 'textures/marsmoon2textur
 var jupitertexture = new THREE.TextureLoader().load( 'textures/jupitertexture.jpg' );
 var jupitercloudmesh = new THREE.TextureLoader().load( 'textures/jupitercloudmap.jpg' );
 var saturntexture = new THREE.TextureLoader().load( 'textures/saturntexture.jpg' );
+var saturncloudmesh = new THREE.TextureLoader().load( 'textures/saturncloudmap.jpg' );
 var uranustexture = new THREE.TextureLoader().load( 'textures/uranustexture.png' );
+var uranuscloudmesh = new THREE.TextureLoader().load( 'textures/uranuscloudmap.jpg' );
 var neptunetexture = new THREE.TextureLoader().load( 'textures/neptunetexture.jpg' );
-var galaxytexture1 = new THREE.TextureLoader().load( 'textures/galaxy.jpg' );
-var galaxytexture2 = new THREE.TextureLoader().load( 'textures/galaxy2.jpg' );
+var neptunecloudmesh = new THREE.TextureLoader().load( 'textures/neptunecloudmap.jpg' );
 
 //load all normals
 var suntextureNORMAL = new THREE.TextureLoader().load( 'normals/suntextureNORMAL.png' );
@@ -24,6 +25,7 @@ var mercurytextureNORMAL = new THREE.TextureLoader().load( 'normals/mercurytextu
 var venustextureNORMAL = new THREE.TextureLoader().load( 'normals/venustextureNORMAL.png' );
 var venuscloudmeshNORMAL = new THREE.TextureLoader().load( 'normals/venuscloudmapNORMAL.png' );
 var earthtextureNORMAL = new THREE.TextureLoader().load( 'normals/earthtextureNORMAL.png' );
+var earthcloudmeshNORMAL = new THREE.TextureLoader().load( 'normals/earthcloudmeshNORMAL.png' );
 var earthmoontextureNORMAL = new THREE.TextureLoader().load( 'textures/earthmoontextureNORMAL.png' );
 var marstextureNORMAL = new THREE.TextureLoader().load( 'normals/marstextureNORMAL.png' );
 var marscloudmeshNORMAL = new THREE.TextureLoader().load( 'normals/marscloudmapNORMAL.png' );
@@ -32,8 +34,11 @@ var marsmoon2textureNORMAL = new THREE.TextureLoader().load( 'normals/marsmoon2t
 var jupitertextureNORMAL = new THREE.TextureLoader().load( 'normals/jupitertextureNORMAL.png' );
 var jupitercloudmeshNORMAL = new THREE.TextureLoader().load( 'normals/jupitercloudmapNORMAL.png' );
 var saturntextureNORMAL = new THREE.TextureLoader().load( 'normals/saturntextureNORMAL.png' );
+var saturncloudmeshNORMAL = new THREE.TextureLoader().load( 'normals/saturncloudmapNORMAL.png' );
 var uranustextureNORMAL = new THREE.TextureLoader().load( 'normals/uranustextureNORMAL.png' );
+var uranuscloudmeshNORMAL = new THREE.TextureLoader().load( 'normals/uranuscloudmapNORMAL.png' );
 var neptunetextureNORMAL = new THREE.TextureLoader().load( 'normals/neptunetextureNORMAL.png' );
+var neptunecloudmeshNORMAL = new THREE.TextureLoader().load( 'normals/neptunecloudmapNORMAL.png' );
 
 //html file will call main on load
 function main()
@@ -43,6 +48,8 @@ function main()
 	createLight();
 	createSun();
 	createPlanets();
+	stylizePlanets();
+	createMoons();
 	createBackground();
 	setupGui();
 	setupPlanetText();
@@ -57,6 +64,7 @@ var scene, renderer, camera, controls, gui, loader;
 
 function basicSetup()
 {
+	
 	scene = new THREE.Scene();
 
 	camera = new THREE.PerspectiveCamera(45,
@@ -69,6 +77,7 @@ function basicSetup()
 	controls = new THREE.OrbitControls( camera, renderer.domElement );
 
 	loader = new THREE.FontLoader();
+
 }
 
 
@@ -76,8 +85,11 @@ function basicSetup()
 //as well as a low ambiance
 function createLight()
 {
+
+	//ambient light
 	scene.add(new THREE.AmbientLight( 0x0f0f0f ));
 
+	//sunlight
 	var lightsrc = new THREE.SphereGeometry(.001, 1, 1);
 	var sunLight = new THREE.PointLight(0xffffff);
 
@@ -94,8 +106,8 @@ function createLight()
 }
 
 
-//creates the sun in the scene and 10 glowing layers around it
-var sun, glow1,glow2,glow3,glow4,glow5,glow6,glow7,glow7,glow9,glow10;
+//creates the sun in the scene and 100 glowing layers around it
+var sun;
 
 function createSun()
 {
@@ -106,39 +118,41 @@ function createSun()
 	sun = new THREE.Mesh( geometry, material );
 	scene.add( sun );
 
-	//outer glow for sun
-	var op=1.2;
-	var mult=1.0;
-
+	//outer glow for sun, eath layer is slightly farther from sun with less opacity
 	var exp=2.70;
 	var pac=.3;
 
 	for(var i=0;i<100;i++)
 	{
+
 		exp=exp*1.0027
 		pac=pac*.97;
 		geometry =  new THREE.SphereGeometry( exp, 30, 30 );
 		material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: pac } );
 		glow1 = new THREE.Mesh( geometry, material );
 		sun.add(glow1);
-	}
 
+	}
 
 }
 
 
-//creates all planets in the scene and their rings
-var venuscloudmesh,earthmoon, earthcloudmesh, marscloudmesh,marsmoon1, marsmoon2,jupitercloudmesh, jupiterring,
+//creates all planets in the scene, inside an array
+//array planetsare the planets in order from Mercury to Neptune
+var venuscloudmesh, earthcloudmesh, marscloudmesh,jupitercloudmesh, jupiterring,
 saturnring,  uranusring, neptunering;
 
 var planets=[];
 
 function createPlanets()
 {
-	//planets in order from mercury to neptune
+	//planets in order from mercury to neptune with respective sizes, textures and normals
+	//plents positions are set in render()
+
 	var sizees = [.3,.4,.6,.5,2,1.2,1,1]
 	var maps=[mercurytexture,venustexture,earthtexture, marstexture,jupitertexture,saturntexture,uranustexture,neptunetexture];
 	var normals = [mercurytextureNORMAL,venustextureNORMAL,earthtextureNORMAL, marstextureNORMAL,jupitertextureNORMAL,saturntextureNORMAL,uranustextureNORMAL,neptunetextureNORMAL];
+
 	for(var i=0;i<=7;i++)
 	{
 
@@ -149,37 +163,19 @@ function createPlanets()
 	}
 
 
-	//venus clouds
-	geometry   = new THREE.SphereGeometry(.41, 20, 20)
-	material  = new THREE.MeshPhongMaterial({map :venuscloudmesh, normalMap: venuscloudmeshNORMAL,
-  	opacity     : 0.3, transparent : true,
-	})
-	venuscloudmesh = new THREE.Mesh(geometry, material)
-	planets[1].add(venuscloudmesh)
+}
 
+//creates all moons in scene
+var earthmoon, marsmoon1, marsmoon2;
 
+function createMoons()
+{
 	//earth moon
 	geometry = new THREE.SphereGeometry(.3, 20, 20);
 	material = new THREE.MeshPhongMaterial( { map:earthmoontexture } );
 	earthmoon = new THREE.Mesh( geometry, material );
 	earthmoon.position.set(20, .25, -20);
 	scene.add(earthmoon);
-
-	//earth clouds
-	geometry   = new THREE.SphereGeometry(.61, 20, 20)
-	material  = new THREE.MeshPhongMaterial({map :earthcloudmesh,
-  	opacity     : 0.2, transparent : true,
-	})
-	earthcloudmesh = new THREE.Mesh(geometry, material)
-	planets[2].add(earthcloudmesh)
-
-	//mars clouds
-	geometry   = new THREE.SphereGeometry(.51, 20, 20)
-	material  = new THREE.MeshPhongMaterial({map :marscloudmesh, normalMap: marscloudmeshNORMAL,
-  	opacity     : .3, transparent : true,
-	})
-	marscloudmesh = new THREE.Mesh(geometry, material)
-	planets[3].add(marscloudmesh)
 
 	//Mars moon1 Phobos
 	geometry = new THREE.SphereGeometry(0.2, 20, 20);
@@ -194,15 +190,40 @@ function createPlanets()
 	marsmoon2 = new THREE.Mesh( geometry, material );
 	marsmoon2.position.set(10, 0, 10);
 	scene.add(marsmoon2);
-	
 
-	//jupiter clouds
-	geometry   = new THREE.SphereGeometry(2.02, 20, 20)
-	material  = new THREE.MeshPhongMaterial({map :jupitercloudmesh, normalMap: jupitercloudmeshNORMAL,
-  	opacity     : .3, transparent : true,
-	})
-	jupitercloudmesh = new THREE.Mesh(geometry, material)
-	planets[4].add(jupitercloudmesh)
+}
+
+
+var saturncloudmesh, uranuscloudmesh, neptunecloudmesh;
+var clouds=[];
+//adds clouds to all planets with an atmosphere and rings to all planets with rings
+function stylizePlanets()
+{
+
+	//clouds
+	var sizes=[.41,.61,.51,2.02,1.21,1.02,1.02];
+	var texts=[venuscloudmesh,earthcloudmesh,marscloudmesh,jupitercloudmesh,saturncloudmesh,uranuscloudmesh,neptunecloudmesh];
+	var norms=[venuscloudmeshNORMAL,earthcloudmeshNORMAL,marscloudmeshNORMAL,jupitercloudmeshNORMAL,saturncloudmeshNORMAL,uranuscloudmeshNORMAL,neptunecloudmeshNORMAL];
+	var opac=[.3,.2,.3,.3,.15,.1,.15];
+	for(var i=0;i<7;i++)
+	{
+		geometry   = new THREE.SphereGeometry(sizes[i], 20, 20);
+		material  = new THREE.MeshPhongMaterial({map :texts[i], normalMap: norms[i],
+  		opacity     : opac[i], transparent : true,
+		})
+		if(i==1)
+		{
+			material  = new THREE.MeshPhongMaterial({map :texts[i],
+  		opacity     : opac[i], transparent : true,
+		})
+		}
+
+		clouds[i] = new THREE.Mesh(geometry, material);
+		planets[i+1].add(clouds[i]);
+
+
+	}
+
 
 	//Jupiter ring
 	geometry = new THREE.RingGeometry( 2.2, 3, 32 );
@@ -235,6 +256,7 @@ function createPlanets()
 	neptunering.position.set(-10, 0, -20);
 	neptunering.rotation.x=-90;
 	scene.add( neptunering );
+
 
 }
 
@@ -324,6 +346,8 @@ function render() {
   planets[0].position.x = Math.sin( time * 4.5 ) * 5;
   planets[0].position.y = Math.cos( time * 4.5 ) * 2;
   planets[0].position.z = Math.cos( time * 4.5 ) * 5;
+
+  planets[0].rotation.y+=.001;
   
   //venus rotation
   planets[1].position.x = Math.sin( time * -2.5 ) * 9;
@@ -331,7 +355,7 @@ function render() {
   planets[1].position.z = Math.cos( time * -2.5 ) * 9;
 
   //venus cloudmap rotation
-  venuscloudmesh.rotation.y+=.001;
+  clouds[0].rotation.y+=.001;
   
   //earth rotation
   planets[2].position.x = Math.sin( time * 1.5 ) * 13;
@@ -343,7 +367,7 @@ function render() {
   earthmoon.rotation.y-=.001;
 
   //earth cloudmap rotation
-  earthcloudmesh.rotation.y+=.001;
+  clouds[1].rotation.y+=.001;
 
   //mars rotation
   planets[3].position.x = Math.sin( time * 1 ) * 18;
@@ -351,7 +375,7 @@ function render() {
   planets[3].position.z = Math.cos( time * 1 ) * 18;
 
   //mars clouds rotation
-  marscloudmesh.rotation.y+=.001;
+  clouds[2].rotation.y+=.001;
 
   //mars moon1 rotation
   marsmoon1.position.x = planets[3].position.x + Math.sin( time * 5 ) * 1.25;
@@ -369,21 +393,27 @@ function render() {
   planets[4].position.z = jupiterring.position.z = Math.cos( time * 0.5 ) * 25;
   
   //jupiter clouds rotation
-  jupitercloudmesh.rotation.y+=.001;
+  clouds[3].rotation.y+=.001;
 
   //saturn rotation
   planets[5].position.x = saturnring.position.x = Math.sin( time * 0.3 ) * 32;
   planets[5].position.z = saturnring.position.z = -Math.cos( time * 0.3 ) * 32;
+
+  clouds[4].rotation.y+=.001;
   
   //uranus rotation
   planets[6].position.x = uranusring.position.x = Math.sin( time * 0.2 ) * 40;
   planets[6].position.y = uranusring.position.y = Math.cos( time * 0.2 ) * 10;
   planets[6].position.z = uranusring.position.z = Math.cos( time * 0.2 ) * 40;
+
+   clouds[5].rotation.y+=.001;
   
   //nepune rotation
   planets[7].position.x = neptunering.position.x = Math.sin( time * 0.1 ) * 50;
   planets[7].position.y = neptunering.position.y = Math.cos( time * 0.1 ) * 20;
   planets[7].position.z = neptunering.position.z = Math.cos( time * 0.1 ) * 50;
+
+  clouds[6].rotation.y+=.001;
 
   //ring rotation
   uranusring.rotation.z-=.0025;
