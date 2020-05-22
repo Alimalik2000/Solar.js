@@ -246,11 +246,11 @@ function stylizePlanets()
 	material = new THREE.MeshPhongMaterial( { map:uranustexture, normalMap: uranustextureNORMAL , side: THREE.DoubleSide, opacity: 0.5 } );
 	uranusring = new THREE.Mesh( geometry, material );
 	uranusring.position.set(-10, 0, -20);
-	uranusring.rotation.x=3;
+	uranusring.rotation.x=20;
 	scene.add( uranusring );
 
 	//Neptune ring
-	geometry = new THREE.RingGeometry( 2.2, 2.4, 32 );
+	geometry = new THREE.RingGeometry( 1.7, 2.4, 32 );
 	material = new THREE.MeshPhongMaterial( { map:neptunetexture, normalMap: neptunetextureNORMAL, side: THREE.DoubleSide , opacity: 0.5} );
 	neptunering = new THREE.Mesh( geometry, material );
 	neptunering.position.set(-10, 0, -20);
@@ -268,7 +268,7 @@ function createBackground()
 	
 
 	//blue stars
-	var geometry = new THREE.SphereGeometry(.5, 10, 10);
+	var geometry = new THREE.SphereGeometry(.6, 8, 8);
 	var material = new THREE.MeshBasicMaterial( {  } );
 
 	for ( var i = 0; i < 200; i ++ ) 
@@ -608,8 +608,11 @@ function focus(planet)
 }
 
 
+var camrotate=false;
 //if a user choose to use orbtal controls, planetlock is disabled
 document.addEventListener("mousedown", function(event){
+
+
 
     freeRoam=true
 
@@ -850,84 +853,84 @@ function render2() {
 			lockon=true;
 			suntext.lookAt(camera.position);
   			suntext.visible=true;
-  			setTimeout(function(){ suntext.visible=false }, 100);
+  			setTimeout(function(){ suntext.visible=false }, 1500);
 		}
 		else if(intersects[ i ].object.id==planets[0].id)
 		{
 			lockon=true;
 			mercurytext.lookAt(camera.position);
   			mercurytext.visible=true;
-  			setTimeout(function(){ mercurytext.visible=false }, 100);
+  			setTimeout(function(){ mercurytext.visible=false }, 1500);
 		}
 		else if(intersects[ i ].object.id==planets[1].id)
 		{
 			lockon=true;
 			venustext.lookAt(camera.position);
   			venustext.visible=true;
-  			setTimeout(function(){ venustext.visible=false }, 100);
+  			setTimeout(function(){ venustext.visible=false }, 1500);
 		}
 		else if(intersects[ i ].object.id==planets[2].id)
 		{
 			lockon=true;
 			earthtext.lookAt(camera.position);
   			earthtext.visible=true;
-  			setTimeout(function(){ earthtext.visible=false }, 100);
+  			setTimeout(function(){ earthtext.visible=false }, 1500);
 		}
 		else if(intersects[ i ].object.id==earthmoon.id)
 		{
 			lockon=true;
 			earthmoontext.lookAt(camera.position);
   			earthmoontext.visible=true;
-  			setTimeout(function(){ earthmoontext.visible=false }, 100);
+  			setTimeout(function(){ earthmoontext.visible=false }, 1500);
 		}
 		else if(intersects[ i ].object.id==planets[3].id)
 		{
 			lockon=true;
 			marstext.lookAt(camera.position);
   			marstext.visible=true;
-  			setTimeout(function(){ marstext.visible=false }, 100);
+  			setTimeout(function(){ marstext.visible=false }, 1500);
 		}
 		else if(intersects[ i ].object.id==marsmoon1.id)
 		{
 			lockon=true;
 			marsmoon1text.lookAt(camera.position);
   			marsmoon1text.visible=true;
-  			setTimeout(function(){ marsmoon1text.visible=false }, 100);
+  			setTimeout(function(){ marsmoon1text.visible=false }, 1500);
 		}
 		else if(intersects[ i ].object.id==marsmoon2.id)
 		{
 			lockon=true;
 			marsmoon2text.lookAt(camera.position);
   			marsmoon2text.visible=true;
-  			setTimeout(function(){ marsmoon2text.visible=false }, 100);
+  			setTimeout(function(){ marsmoon2text.visible=false }, 1500);
 		}
 		else if(intersects[ i ].object.id==planets[4].id)
 		{
 			lockon=true;
 			jupitertext.lookAt(camera.position);
   			jupitertext.visible=true;
-  			setTimeout(function(){ jupitertext.visible=false }, 100);
+  			setTimeout(function(){ jupitertext.visible=false }, 1500);
 		}
 		else if(intersects[ i ].object.id==planets[5].id)
 		{
 			lockon=true;
 			saturntext.lookAt(camera.position);
   			saturntext.visible=true;
-  			setTimeout(function(){ saturntext.visible=false }, 100);
+  			setTimeout(function(){ saturntext.visible=false }, 1500);
 		}
 		else if(intersects[ i ].object.id==planets[6].id)
 		{
 			lockon=true;
 			uranustext.lookAt(camera.position);
   			uranustext.visible=true;
-  			setTimeout(function(){ uranustext.visible=false }, 100);
+  			setTimeout(function(){ uranustext.visible=false }, 1500);
 		}
 		else if(intersects[ i ].object.id==planets[7].id)
 		{
 			lockon=true;
 			neptunetext.lookAt(camera.position);
   			neptunetext.visible=true;
-  			setTimeout(function(){ neptunetext.visible=false }, 100);
+  			setTimeout(function(){ neptunetext.visible=false }, 1500);
 		}
 		else
 		{
@@ -944,3 +947,16 @@ function render2() {
 
 
 
+window.addEventListener("load", function () {
+
+    
+ 	const loader = document.querySelector(".loader");
+	   loader.className += " hidden"; // class "loader hidden"
+
+
+
+});
+
+
+
+	
