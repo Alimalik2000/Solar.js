@@ -197,11 +197,11 @@ function createMoons()
 }
 
 
-var venuscloudmesh, earthcloudmesh, marscloudmesh,jupitercloudmesh, jupiterring,
-saturnring,  uranusring, neptunering;
-var saturncloudmesh, uranuscloudmesh, neptunecloudmesh;
-var clouds=[];
+
 //adds clouds to all planets with an atmosphere and rings to all planets with rings
+var clouds=[];
+var rings=[];
+
 function stylizePlanets()
 {
 
@@ -229,43 +229,29 @@ function stylizePlanets()
 
 	}
 
+	//rings for all planets Jupiter until Neptune
+	var sizes1=[2.2,2,1.6,1.7];
+	var sizes2=[3,2.9,2.0,2.4];
+	var rotations = [11,90,20,90]
+	var texts=[jupitertexture,saturntexture,uranustexture,neptunetexture];
+	var norms=[jupitertextureNORMAL,saturntextureNORMAL,uranustextureNORMAL,neptunetextureNORMAL];
 
-	//Jupiter ring
-	geometry = new THREE.RingGeometry( 2.2, 3, 32 );
-	material = new THREE.MeshPhongMaterial( { map:jupitertexture, normalMap: jupitertextureNORMAL, side: THREE.DoubleSide, opacity: 0.5} );
-	jupiterring = new THREE.Mesh( geometry, material );
-	jupiterring.rotation.x=11;
-	jupiterring.position.set(20, 0, -20);
-	scene.add( jupiterring );
+	for(var i=0;i<4;i++)
+	{
 
-	//Saturn ring
-	geometry = new THREE.RingGeometry( 2, 2.9, 32 );
-	material = new THREE.MeshPhongMaterial( { map:saturntexture, normalMap: saturntextureNORMAL, side: THREE.DoubleSide, opacity: 0.5 } );
-	saturnring = new THREE.Mesh( geometry, material );
-	saturnring.rotation.x=90;
-	saturnring.position.set(-10, 0, -20);
-	scene.add( saturnring );
-
-	//Uranus ring
-	geometry = new THREE.RingGeometry( 1.6, 2.0, 32 );
-	material = new THREE.MeshPhongMaterial( { map:uranustexture, normalMap: uranustextureNORMAL , side: THREE.DoubleSide, opacity: 0.5 } );
-	uranusring = new THREE.Mesh( geometry, material );
-	uranusring.position.set(-10, 0, -20);
-	uranusring.rotation.x=20;
-	scene.add( uranusring );
-
-	//Neptune ring
-	geometry = new THREE.RingGeometry( 1.7, 2.4, 32 );
-	material = new THREE.MeshPhongMaterial( { map:neptunetexture, normalMap: neptunetextureNORMAL, side: THREE.DoubleSide , opacity: 0.5} );
-	neptunering = new THREE.Mesh( geometry, material );
-	neptunering.position.set(-10, 0, -20);
-	neptunering.rotation.x=-90;
-	scene.add( neptunering );
-
+		geometry = new THREE.RingGeometry( sizes1[i], sizes2[i], 32 );
+		material = new THREE.MeshPhongMaterial( { map:texts[i], normalMap: norms[i], side: THREE.DoubleSide, opacity: 0.5} );
+		rings[i] = new THREE.Mesh( geometry, material );
+		rings[i].rotation.x=rotations[i];
+		scene.add( rings[i] );
+	
+	}
 
 }
 
-//creates background of scene, stars and galaxies
+
+
+//creates background of scene, blue ans white stars
 var bluestars, particles;
 
 function createBackground()
@@ -321,15 +307,15 @@ function createBackground()
 }
 
 
+
 //moves planets in orbit, plus rotates and spins them, also moves star
 //position slightly, also locks camera to planets if clicked in gui
 
 //used in render to move white stars
 var moveparticles=0;
 
-//planet locks
-var lockSun=true, lockMercury=false,lockVenus=false,lockEarth=false, lockMars=false, lockJupiter=false,lockSaturn=false,
-lockUranus=false,lockNeptune=false;
+//planet and sun locks from gui, Sun to Neptune
+var locksunandplanets=[true,false,false,false,false,false,false,false,false]
 
 //true is camera is not locked on a planet from gui, false otherwise
 var freeRoam=false;
@@ -338,191 +324,143 @@ function render() {
 
   requestAnimationFrame(render);
 
-  var time = Date.now() * 0.0001;
+  var time = Date.now() * 0.0001; //current time so planets are alwasy randomized
 
   //sun rotation
-
   sun.rotation.x+=.0001;
   sun.rotation.y+=.0001;
   sun.rotation.z+=.0001;
-
 
   //mercury rotation
   planets[0].position.x = Math.sin( time * 4.5 ) * 5;
   planets[0].position.y = Math.cos( time * 4.5 ) * 2;
   planets[0].position.z = Math.cos( time * 4.5 ) * 5;
-
   planets[0].rotation.y+=.001;
   
   //venus rotation
   planets[1].position.x = Math.sin( time * -2.5 ) * 9;
   planets[1].position.y = Math.sin( time * -1.5 ) * 2;
   planets[1].position.z = Math.cos( time * -2.5 ) * 9;
-
   //venus cloudmap rotation
   clouds[0].rotation.y+=.001;
   
   //earth rotation
   planets[2].position.x = Math.sin( time * 1.5 ) * 13;
   planets[2].position.z = Math.cos( time * 1.5 ) * 13;
+  //earth cloudmap rotation
+  clouds[1].rotation.y+=.001;
 
-    //earth moon rotation
+  //earth moon rotation
   earthmoon.position.x = planets[2].position.x+Math.sin( time * 1.1 ) * 1.5;
   earthmoon.position.z = planets[2].position.z-Math.cos( time * 1.1 ) * 1.5;
   earthmoon.rotation.y-=.001;
-
-  //earth cloudmap rotation
-  clouds[1].rotation.y+=.001;
 
   //mars rotation
   planets[3].position.x = Math.sin( time * 1 ) * 18;
   planets[3].position.y = Math.cos( time * 1 ) * 4;
   planets[3].position.z = Math.cos( time * 1 ) * 18;
-
   //mars clouds rotation
   clouds[2].rotation.y+=.001;
 
-  //mars moon1 rotation
+  //mars moon Phobos rotation
   moons[0].position.x = planets[3].position.x + Math.sin( time * 5 ) * 1.25;
   moons[0].position.y = planets[3].position.y - .2;
   moons[0].position.z = planets[3].position.z - Math.cos( time * 5 ) * 1.25;
 
-   //mars moon2 rotation
+  //mars moon Deimos rotation
   moons[1].position.x = planets[3].position.x - Math.sin( time * 3 ) * 2.5;
   moons[1].position.y = planets[3].position.y +.1;
   moons[1].position.z = planets[3].position.z - Math.cos( time * 3 ) * 2.5;
   
   //jupiter rotation
-  planets[4].position.x = jupiterring.position.x = Math.sin( time * 0.5 ) * 25;
-  planets[4].position.y = jupiterring.position.y = Math.sin( time * 0.5 ) * 3;
-  planets[4].position.z = jupiterring.position.z = Math.cos( time * 0.5 ) * 25;
-  
+  planets[4].position.x = rings[0].position.x = Math.sin( time * 0.5 ) * 25;
+  planets[4].position.y = rings[0].position.y = Math.sin( time * 0.5 ) * 3;
+  planets[4].position.z = rings[0].position.z = Math.cos( time * 0.5 ) * 25;
   //jupiter clouds rotation
   clouds[3].rotation.y+=.001;
 
   //saturn rotation
-  planets[5].position.x = saturnring.position.x = Math.sin( time * 0.3 ) * 32;
-  planets[5].position.z = saturnring.position.z = -Math.cos( time * 0.3 ) * 32;
-
+  planets[5].position.x = rings[1].position.x = Math.sin( time * 0.3 ) * 32;
+  planets[5].position.z = rings[1].position.z = -Math.cos( time * 0.3 ) * 32;
+  //saturn clouds rotation
   clouds[4].rotation.y+=.001;
   
   //uranus rotation
-  planets[6].position.x = uranusring.position.x = Math.sin( time * 0.2 ) * 40;
-  planets[6].position.y = uranusring.position.y = Math.cos( time * 0.2 ) * 10;
-  planets[6].position.z = uranusring.position.z = Math.cos( time * 0.2 ) * 40;
-
-   clouds[5].rotation.y+=.001;
+  planets[6].position.x = rings[2].position.x = Math.sin( time * 0.2 ) * 40;
+  planets[6].position.y = rings[2].position.y = Math.cos( time * 0.2 ) * 10;
+  planets[6].position.z = rings[2].position.z = Math.cos( time * 0.2 ) * 40;
+  //uranus clouds rotation
+  clouds[5].rotation.y+=.001;
   
   //nepune rotation
-  planets[7].position.x = neptunering.position.x = Math.sin( time * 0.1 ) * 50;
-  planets[7].position.y = neptunering.position.y = Math.cos( time * 0.1 ) * 20;
-  planets[7].position.z = neptunering.position.z = Math.cos( time * 0.1 ) * 50;
-
+  planets[7].position.x = rings[3].position.x = Math.sin( time * 0.1 ) * 50;
+  planets[7].position.y = rings[3].position.y = Math.cos( time * 0.1 ) * 20;
+  planets[7].position.z = rings[3].position.z = Math.cos( time * 0.1 ) * 50;
+  //neptune clouds rotation
   clouds[6].rotation.y+=.001;
 
   //ring rotation
-  uranusring.rotation.z-=.0025;
-  saturnring.rotation.z+=.0025;
-  jupiterring.rotation.z-=.0025;
-  neptunering.rotation.z-=.0025;
+  rings[0].rotation.z-=.0025;
+  rings[1].rotation.z+=.0025;
+  rings[2].rotation.z-=.0025;
+  rings[3].rotation.z-=.0025;
+
 
   //star position change, moves slightly both ways on x axis
   moveparticles++;
 
-	 if(moveparticles<3000)
-	 {
-	 	particles.position.x+=.03;
-	 	particles.position.z-=.03;
+  if(moveparticles<3000)
+  {
+	 particles.position.x+=.03;
+	 particles.position.z-=.03;
 
-	 }
-	 else if(moveparticles<6000)
-	 {
-	 	particles.position.x-=.03;
-	 	particles.position.z+=.03;
-	 }
-	 else
-	 {
-	 	moveparticles=0;
-	 }
+  }
+  else if(moveparticles<6000)
+  {
+ 	 particles.position.x-=.03;
+	 particles.position.z+=.03;
+  }
+  else
+  {
+	 moveparticles=0;
+  }
 
-	 //planet lock system
-	 if(freeRoam==false)
-	 {
 
-	 	if(lockSun)
-	 	{
-	 		controls.target0.set( sun.position.x, sun.position.y, sun.position.z);
-  			controls.reset();
-  			camera.position.x=sun.position.x+Math.sin(time)*21;
-  			camera.position.y=sun.position.y;
-  			camera.position.z=sun.position.z-Math.cos(time)*21;
+  //planet lock system
+  //distance from each planet/sun camera will be
+  var lockdistance=[21,3,4,5,4,10,9,9,9]
+  //speed camera will revolve around each planet/sun
+  var lockspeed=[1,1,4,2,2,2,2,2,2]
+  if(freeRoam==false)
+  {
 
-	 	}
-	 	if(lockMercury)
-	 	{
-	 		controls.target0.set( planets[0].position.x, planets[0].position.y, planets[0].position.z);
-  			controls.reset();
-  			camera.position.x=planets[0].position.x+Math.sin(time)*3;
-  			camera.position.y=planets[0].position.y;
-  			camera.position.z=planets[0].position.z-Math.cos(time)*3;
 
-	 	}
-	 	if(lockVenus)
-	 	{
-	 		controls.target0.set( planets[1].position.x, planets[1].position.y, planets[1].position.z);
-  			controls.reset();
-  			camera.position.x=planets[1].position.x+Math.sin(time*4)*4;
-  			camera.position.y=planets[1].position.y;
-  			camera.position.z=planets[1].position.z-Math.cos(time*4)*4;
-	 	}
-	 	if(lockEarth)
-	 	{
-	 		controls.target0.set( planets[2].position.x, planets[2].position.y, planets[2].position.z);
-  			controls.reset();
-  			camera.position.x=planets[2].position.x+Math.sin(time*2)*5;
-  			camera.position.y=planets[2].position.y;
-  			camera.position.z=planets[2].position.z-Math.cos(time*2)*5;
-	 	}
-	 	if(lockMars)
-	 	{
-	 		controls.target0.set( planets[3].position.x, planets[3].position.y, planets[3].position.z);
-  			controls.reset();
-  			camera.position.x=planets[3].position.x+Math.sin(time*2)*4;
-  			camera.position.y=planets[3].position.y;
-  			camera.position.z=planets[3].position.z-Math.cos(time*2)*4;
-	 	}
-	 	if(lockJupiter)
-	 	{
-	 		controls.target0.set( planets[4].position.x, planets[4].position.y, planets[4].position.z);
-  			controls.reset();
-  			camera.position.x=planets[4].position.x+Math.sin(time*2)*10;
-  			camera.position.y=planets[4].position.y+2;
-  			camera.position.z=planets[4].position.z-Math.cos(time*2)*10;
-	 	}
-	 	if(lockSaturn)
-	 	{
-	 		controls.target0.set( planets[5].position.x, planets[5].position.y, planets[5].position.z);
-  			controls.reset();
-  			camera.position.x=planets[5].position.x+Math.sin(time*2)*9;
-  			camera.position.y=planets[5].position.y;
-  			camera.position.z=planets[5].position.z-Math.cos(time*2)*9;
-	 	}
-	 	if(lockUranus)
-	 	{
-	 		controls.target0.set( planets[6].position.x, planets[6].position.y, planets[6].position.z);
-  			controls.reset();
-  			camera.position.x=planets[6].position.x+Math.sin(time*2)*9;
-  			camera.position.y=planets[6].position.y;
-  			camera.position.z=planets[6].position.z-Math.cos(time*2)*9;
-	 	}
-	 	if(lockNeptune)
-	 	{
-	 		controls.target0.set( planets[7].position.x, planets[7].position.y, planets[7].position.z);
-  			controls.reset();
-  			camera.position.x=planets[7].position.x+Math.sin(time*2)*9;
-  			camera.position.y=planets[7].position.y;
-  			camera.position.z=planets[7].position.z-Math.cos(time*2)*9;
-	 	}
+  		for(var i=0;i<9;i++)
+  		{
+  			if(locksunandplanets[i])
+  			{
+  				if(i==0)//in the case of the sun
+  				{
+  					controls.target0.set( sun.position.x, sun.position.y, sun.position.z);
+  					controls.reset();
+  					camera.position.x=sun.position.x+Math.sin(time)*21;
+  					camera.position.y=sun.position.y;
+  					camera.position.z=sun.position.z-Math.cos(time)*21;
+
+  				}
+  				else
+  				{
+
+  					controls.target0.set( planets[i-1].position.x, planets[i-1].position.y, planets[i-1].position.z);
+  					controls.reset();
+  					camera.position.x=planets[i-1].position.x+Math.sin(time*lockspeed[i])*lockdistance[i];
+  					camera.position.y=planets[i-1].position.y;
+  					camera.position.z=planets[i-1].position.z-Math.cos(time*lockspeed[i])*lockdistance[i];
+
+  				}
+
+  			}
+  		}
 
 	 	controls.update();
 	 
@@ -600,15 +538,15 @@ function focus(planet)
 	freeRoam=false;
 
 	guiElements.PLANETLOCK="          ENABLED";
-	if(planet=="sun")lockSun=true;
-	if(planet=="mercury")lockMercury=true;
-	if(planet=="venus")lockVenus=true;
-	if(planet=="earth")lockEarth=true;
-	if(planet=="mars")lockMars=true;
-	if(planet=="jupiter")lockJupiter=true;
-	if(planet=="saturn")lockSaturn=true;
-	if(planet=="uranus")lockUranus=true;
-	if(planet=="neptune")lockNeptune=true;
+	if(planet=="sun")locksunandplanets[0]=true;
+	if(planet=="mercury")locksunandplanets[1]=true;
+	if(planet=="venus")locksunandplanets[2]=true;
+	if(planet=="earth")locksunandplanets[3]=true;
+	if(planet=="mars")locksunandplanets[4]=true;
+	if(planet=="jupiter")locksunandplanets[5]=true;
+	if(planet=="saturn")locksunandplanets[6]=true;
+	if(planet=="uranus")locksunandplanets[7]=true;
+	if(planet=="neptune")locksunandplanets[8]=true;
 
 }
 
@@ -623,16 +561,12 @@ document.addEventListener("mousedown", function(event){
 
 
     guiElements.PLANETLOCK="          DISABLED"
-    lockSun=false;
-	lockMercury=false;
-	lockVenus=false;
-	lockEarth=false;
-	lockMars=false;
-	lockJupiter=false;
-	lockSaturn=false;
-	lockUranus=false;
-	lockNeptune=false;
-  
+
+    for(var i=0;i<9;i++)
+    {
+    	locksunandplanets[i]=false;
+    }
+
 });
 
 
