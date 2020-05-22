@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <body onload="main()">  <!-- call main() in Solar.js when program begins -->
+        <meta charset="utf-8">
+            <title>Solar.js</title> 
+        <style>
+            body { margin: 0; }
+            canvas { display: block; }
+        </style>
+    </head>
+
+    <div class="loader">   <!-- creates loading screen while src files load  -->
+           <img src="load_1.gif" alt="Loading..." />
+    </div>
+    <style media="screen">
+
+        .loader 
+        {
+            position: fixed;
+            z-index: 99;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader > img 
+        {
+            width: 300px;
+        }
+
+        .loader.hidden {
+            animation: fadeOut 1s;
+            animation-fill-mode: forwards;
+            animation-delay: 4s;
+        }
+
+        @keyframes fadeOut 
+        {
+            100% 
+            {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+    </style>
+    <body> 
+            <script src="three/three.js"></script> <!-- open source library -->
+            <script src="three/OrbitControls.js"></script>
+            <script src="threex/threex.atmospherematerial.js"></script> <!-- open source library -->
+            <script src="threex/threex.dilategeometry.js"></script>
+            <script src="threex/threex.geometricglowmesh.js"></script>
+            <script type="text/javascript" src="gui/dat.gui.min.js"></script>
+            <script src="Solar.js"></script>  <!-- main file -->
+            <script>
+        </script>
+    </body>
+    </body>
+</html>

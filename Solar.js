@@ -59,7 +59,7 @@ function main()
 }
 
 
-//basic three setup with orbital controls
+//basic three setup with orbital controls, gui and font loader
 var scene, renderer, camera, controls, gui, loader;
 
 function basicSetup()
@@ -118,7 +118,8 @@ function createSun()
 	sun = new THREE.Mesh( geometry, material );
 	scene.add( sun );
 
-	//outer glow for sun, eath layer is slightly farther from sun with less opacity
+	//outer glow for sun, eath layer is slightly farther from eath layer before with less opacity
+	//than the layer before
 	var exp=2.70;
 	var pac=.3;
 
@@ -138,69 +139,73 @@ function createSun()
 
 
 //creates all planets in the scene, inside an array
-//array planetsare the planets in order from Mercury to Neptune
-var venuscloudmesh, earthcloudmesh, marscloudmesh,jupitercloudmesh, jupiterring,
-saturnring,  uranusring, neptunering;
-
+//array planets are the planets in order from Mercury to Neptune
 var planets=[];
 
 function createPlanets()
 {
+
 	//planets in order from mercury to neptune with respective sizes, textures and normals
 	//plents positions are set in render()
-
-	var sizees = [.3,.4,.6,.5,2,1.2,1,1]
+	// Mercury -> Venus -> Earth -> Jupiter -> Saturn -> Uranus -> Neptune
+	var sizes = [.3,.4,.6,.5,2,1.2,1,1]
 	var maps=[mercurytexture,venustexture,earthtexture, marstexture,jupitertexture,saturntexture,uranustexture,neptunetexture];
 	var normals = [mercurytextureNORMAL,venustextureNORMAL,earthtextureNORMAL, marstextureNORMAL,jupitertextureNORMAL,saturntextureNORMAL,uranustextureNORMAL,neptunetextureNORMAL];
 
 	for(var i=0;i<=7;i++)
 	{
 
-		geometry = new THREE.SphereGeometry(sizees[i], 20, 20);
+		geometry = new THREE.SphereGeometry(sizes[i], 20, 20);
 		material = new THREE.MeshPhongMaterial( { map:maps[i], normalMap: normals[i] } );
 		planets[i] = new THREE.Mesh( geometry, material );
 		scene.add(planets[i]);
-	}
 
+	}
 
 }
 
 //creates all moons in scene
-var earthmoon, marsmoon1, marsmoon2;
+var earthmoon;
+//array holds moons from Phobos until Deimos
+var moons =[];
 
 function createMoons()
 {
-	//earth moon
+
+	//earth moon, creating outside array because it does not have a normal
 	geometry = new THREE.SphereGeometry(.3, 20, 20);
-	material = new THREE.MeshPhongMaterial( { map:earthmoontexture } );
+	material = new THREE.MeshPhongMaterial( { map:earthmoontexture} );
 	earthmoon = new THREE.Mesh( geometry, material );
 	earthmoon.position.set(20, .25, -20);
 	scene.add(earthmoon);
 
-	//Mars moon1 Phobos
-	geometry = new THREE.SphereGeometry(0.2, 20, 20);
-	material = new THREE.MeshPhongMaterial( { map:marsmoon1texture, normalMap: marsmoon1textureNORMAL } );
-	marsmoon1 = new THREE.Mesh( geometry, material );
-	marsmoon1.position.set(10, 0, 10);
-	scene.add(marsmoon1);
+	//creating moons from Phobos until Deimos
+	var sizes = [.2,.12];
+	var maps = [marsmoon1texture, marsmoon2texture];
+	var normals = [marsmoon1textureNORMAL, marsmoon2textureNORMAL]
 
-	//Mars moon2 Deimos
-	geometry = new THREE.SphereGeometry(0.12, 20, 20);
-	material = new THREE.MeshPhongMaterial( { map:marsmoon2texture, normalMap: marsmoon2textureNORMAL } );
-	marsmoon2 = new THREE.Mesh( geometry, material );
-	marsmoon2.position.set(10, 0, 10);
-	scene.add(marsmoon2);
+	for(var i=0;i<2;i++)
+	{
+
+		geometry = new THREE.SphereGeometry(sizes[i], 20, 20);
+		material = new THREE.MeshPhongMaterial( { map:maps[i], normalMap: normals[i] } );
+		moons[i] = new THREE.Mesh( geometry, material );
+		scene.add(moons[i]);
+
+	}
 
 }
 
 
+var venuscloudmesh, earthcloudmesh, marscloudmesh,jupitercloudmesh, jupiterring,
+saturnring,  uranusring, neptunering;
 var saturncloudmesh, uranuscloudmesh, neptunecloudmesh;
 var clouds=[];
 //adds clouds to all planets with an atmosphere and rings to all planets with rings
 function stylizePlanets()
 {
 
-	//clouds
+	//clouds for all planets venus until Neptune
 	var sizes=[.41,.61,.51,2.02,1.21,1.02,1.02];
 	var texts=[venuscloudmesh,earthcloudmesh,marscloudmesh,jupitercloudmesh,saturncloudmesh,uranuscloudmesh,neptunecloudmesh];
 	var norms=[venuscloudmeshNORMAL,earthcloudmeshNORMAL,marscloudmeshNORMAL,jupitercloudmeshNORMAL,saturncloudmeshNORMAL,uranuscloudmeshNORMAL,neptunecloudmeshNORMAL];
@@ -378,14 +383,14 @@ function render() {
   clouds[2].rotation.y+=.001;
 
   //mars moon1 rotation
-  marsmoon1.position.x = planets[3].position.x + Math.sin( time * 5 ) * 1.25;
-  marsmoon1.position.y = planets[3].position.y - .2;
-  marsmoon1.position.z = planets[3].position.z - Math.cos( time * 5 ) * 1.25;
+  moons[0].position.x = planets[3].position.x + Math.sin( time * 5 ) * 1.25;
+  moons[0].position.y = planets[3].position.y - .2;
+  moons[0].position.z = planets[3].position.z - Math.cos( time * 5 ) * 1.25;
 
    //mars moon2 rotation
-  marsmoon2.position.x = planets[3].position.x - Math.sin( time * 3 ) * 2.5;
-  marsmoon2.position.y = planets[3].position.y +.1;
-  marsmoon2.position.z = planets[3].position.z - Math.cos( time * 3 ) * 2.5;
+  moons[1].position.x = planets[3].position.x - Math.sin( time * 3 ) * 2.5;
+  moons[1].position.y = planets[3].position.y +.1;
+  moons[1].position.z = planets[3].position.z - Math.cos( time * 3 ) * 2.5;
   
   //jupiter rotation
   planets[4].position.x = jupiterring.position.x = Math.sin( time * 0.5 ) * 25;
@@ -741,7 +746,7 @@ function setupPlanetText()
 	  });
 	  marsmoon1text = new THREE.Mesh( textGeometry, textMaterial );
 	  marsmoon1text.position.y+=.5;
-	  marsmoon1.add( marsmoon1text );
+	  moons[0].add( marsmoon1text );
 	  marsmoon1text.visible=false;
 	});
 
@@ -753,7 +758,7 @@ function setupPlanetText()
 	  });
 	  marsmoon2text = new THREE.Mesh( textGeometry, textMaterial );
 	  marsmoon2text.position.y+=.5;
-	  marsmoon2.add( marsmoon2text );
+	  moons[1].add( marsmoon2text );
 	  marsmoon2text.visible=false;
 	});    
 
@@ -890,14 +895,14 @@ function render2() {
   			marstext.visible=true;
   			setTimeout(function(){ marstext.visible=false }, 1500);
 		}
-		else if(intersects[ i ].object.id==marsmoon1.id)
+		else if(intersects[ i ].object.id==moons[0].id)
 		{
 			lockon=true;
 			marsmoon1text.lookAt(camera.position);
   			marsmoon1text.visible=true;
   			setTimeout(function(){ marsmoon1text.visible=false }, 1500);
 		}
-		else if(intersects[ i ].object.id==marsmoon2.id)
+		else if(intersects[ i ].object.id==moons[1].id)
 		{
 			lockon=true;
 			marsmoon2text.lookAt(camera.position);
