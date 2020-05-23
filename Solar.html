@@ -10,11 +10,20 @@
             canvas { display: block; }
         </style>
     </head>
+     <div id="my-gui-container"></div>
+
 
     <div class="loader">   <!-- creates loading screen while src files load  -->
-           <img src="load_1.gif" alt="Loading..." />
+           <img src="visuals/loading/load_1.gif" />
     </div>
     <style media="screen">
+
+        #my-gui-container {
+         position: absolute;
+        top: 0px;
+        left: 20px;
+        z-index: 10;
+        }
 
         .loader 
         {
@@ -52,12 +61,12 @@
 
     </style>
     <body> 
-            <script src="three/three.js"></script> <!-- open source library -->
-            <script src="three/OrbitControls.js"></script>
-            <script src="threex/threex.atmospherematerial.js"></script> <!-- open source library -->
-            <script src="threex/threex.dilategeometry.js"></script>
-            <script src="threex/threex.geometricglowmesh.js"></script>
-            <script type="text/javascript" src="gui/dat.gui.min.js"></script>
+            <script src="src/three/three.js"></script> <!-- open source library -->
+            <script src="src/three/OrbitControls.js"></script>
+            <script src="src/threex/threex.atmospherematerial.js"></script> <!-- open source library -->
+            <script src="src/threex/threex.dilategeometry.js"></script>
+            <script src="src/threex/threex.geometricglowmesh.js"></script>
+            <script type="text/javascript" src="src/gui/dat.gui.min.js"></script>
             <script src="Solar.js"></script>  <!-- main file -->
             <script>
         </script>

@@ -1,44 +1,44 @@
 //load all textures
-var suntexture = new THREE.TextureLoader().load( 'textures/suntexture.jpg' );
-var mercurytexture = new THREE.TextureLoader().load( 'textures/mercurytexture.jpg' );
-var venustexture = new THREE.TextureLoader().load( 'textures/venustexture.jpg' );
-var venuscloudmesh = new THREE.TextureLoader().load( 'textures/venuscloudmap.jpg' );
-var earthtexture = new THREE.TextureLoader().load( 'textures/earthtexture.jpg' );
-var earthcloudmesh = new THREE.TextureLoader().load( 'textures/earthcloudmap.jpg' );
-var earthmoontexture = new THREE.TextureLoader().load( 'textures/earthmoontexture.jpg' );
-var marstexture = new THREE.TextureLoader().load( 'textures/marstexture.jpg' );
-var marscloudmesh = new THREE.TextureLoader().load( 'textures/marscloudmap.jpg' );
-var marsmoon1texture = new THREE.TextureLoader().load( 'textures/marsmoon1texture.jpg' );
-var marsmoon2texture = new THREE.TextureLoader().load( 'textures/marsmoon2texture.jpg' );
-var jupitertexture = new THREE.TextureLoader().load( 'textures/jupitertexture.jpg' );
-var jupitercloudmesh = new THREE.TextureLoader().load( 'textures/jupitercloudmap.jpg' );
-var saturntexture = new THREE.TextureLoader().load( 'textures/saturntexture.jpg' );
-var saturncloudmesh = new THREE.TextureLoader().load( 'textures/saturncloudmap.jpg' );
-var uranustexture = new THREE.TextureLoader().load( 'textures/uranustexture.png' );
-var uranuscloudmesh = new THREE.TextureLoader().load( 'textures/uranuscloudmap.jpg' );
-var neptunetexture = new THREE.TextureLoader().load( 'textures/neptunetexture.jpg' );
-var neptunecloudmesh = new THREE.TextureLoader().load( 'textures/neptunecloudmap.jpg' );
+var suntexture = new THREE.TextureLoader().load( 'visuals/textures/suntexture.jpg' );
+var mercurytexture = new THREE.TextureLoader().load( 'visuals/textures/mercurytexture.jpg' );
+var venustexture = new THREE.TextureLoader().load( 'visuals/textures/venustexture.jpg' );
+var venuscloudmesh = new THREE.TextureLoader().load( 'visuals/textures/venuscloudmap.jpg' );
+var earthtexture = new THREE.TextureLoader().load( 'visuals/textures/earthtexture.jpg' );
+var earthcloudmesh = new THREE.TextureLoader().load( 'visuals/textures/earthcloudmap.jpg' );
+var earthmoontexture = new THREE.TextureLoader().load( 'visuals/textures/earthmoontexture.jpg' );
+var marstexture = new THREE.TextureLoader().load( 'visuals/textures/marstexture.jpg' );
+var marscloudmesh = new THREE.TextureLoader().load( 'visuals/textures/marscloudmap.jpg' );
+var marsmoon1texture = new THREE.TextureLoader().load( 'visuals/textures/marsmoon1texture.jpg' );
+var marsmoon2texture = new THREE.TextureLoader().load( 'visuals/textures/marsmoon2texture.jpg' );
+var jupitertexture = new THREE.TextureLoader().load( 'visuals/textures/jupitertexture.jpg' );
+var jupitercloudmesh = new THREE.TextureLoader().load( 'visuals/textures/jupitercloudmap.jpg' );
+var saturntexture = new THREE.TextureLoader().load( 'visuals/textures/saturntexture.jpg' );
+var saturncloudmesh = new THREE.TextureLoader().load( 'visuals/textures/saturncloudmap.jpg' );
+var uranustexture = new THREE.TextureLoader().load( 'visuals/textures/uranustexture.png' );
+var uranuscloudmesh = new THREE.TextureLoader().load( 'visuals/textures/uranuscloudmap.jpg' );
+var neptunetexture = new THREE.TextureLoader().load( 'visuals/textures/neptunetexture.jpg' );
+var neptunecloudmesh = new THREE.TextureLoader().load( 'visuals/textures/neptunecloudmap.jpg' );
 
 //load all normals
-var suntextureNORMAL = new THREE.TextureLoader().load( 'normals/suntextureNORMAL.png' );
-var mercurytextureNORMAL = new THREE.TextureLoader().load( 'normals/mercurytextureNORMAL.png' );
-var venustextureNORMAL = new THREE.TextureLoader().load( 'normals/venustextureNORMAL.png' );
-var venuscloudmeshNORMAL = new THREE.TextureLoader().load( 'normals/venuscloudmapNORMAL.png' );
-var earthtextureNORMAL = new THREE.TextureLoader().load( 'normals/earthtextureNORMAL.png' );
-var earthcloudmeshNORMAL = new THREE.TextureLoader().load( 'normals/earthcloudmeshNORMAL.png' );
-var earthmoontextureNORMAL = new THREE.TextureLoader().load( 'textures/earthmoontextureNORMAL.png' );
-var marstextureNORMAL = new THREE.TextureLoader().load( 'normals/marstextureNORMAL.png' );
-var marscloudmeshNORMAL = new THREE.TextureLoader().load( 'normals/marscloudmapNORMAL.png' );
-var marsmoon1textureNORMAL = new THREE.TextureLoader().load( 'normals/marsmoon1textureNORMAL.png' );
-var marsmoon2textureNORMAL = new THREE.TextureLoader().load( 'normals/marsmoon2textureNORMAL.png' );
-var jupitertextureNORMAL = new THREE.TextureLoader().load( 'normals/jupitertextureNORMAL.png' );
-var jupitercloudmeshNORMAL = new THREE.TextureLoader().load( 'normals/jupitercloudmapNORMAL.png' );
-var saturntextureNORMAL = new THREE.TextureLoader().load( 'normals/saturntextureNORMAL.png' );
-var saturncloudmeshNORMAL = new THREE.TextureLoader().load( 'normals/saturncloudmapNORMAL.png' );
-var uranustextureNORMAL = new THREE.TextureLoader().load( 'normals/uranustextureNORMAL.png' );
-var uranuscloudmeshNORMAL = new THREE.TextureLoader().load( 'normals/uranuscloudmapNORMAL.png' );
-var neptunetextureNORMAL = new THREE.TextureLoader().load( 'normals/neptunetextureNORMAL.png' );
-var neptunecloudmeshNORMAL = new THREE.TextureLoader().load( 'normals/neptunecloudmapNORMAL.png' );
+var suntextureNORMAL = new THREE.TextureLoader().load( 'visuals/normals/suntextureNORMAL.png' );
+var mercurytextureNORMAL = new THREE.TextureLoader().load( 'visuals/normals/mercurytextureNORMAL.png' );
+var venustextureNORMAL = new THREE.TextureLoader().load( 'visuals/normals/venustextureNORMAL.png' );
+var venuscloudmeshNORMAL = new THREE.TextureLoader().load( 'visuals/normals/venuscloudmapNORMAL.png' );
+var earthtextureNORMAL = new THREE.TextureLoader().load( 'visuals/normals/earthtextureNORMAL.png' );
+var earthcloudmeshNORMAL = new THREE.TextureLoader().load( 'visuals/normals/earthcloudmeshNORMAL.png' );
+var earthmoontextureNORMAL = new THREE.TextureLoader().load( 'visuals/textures/earthmoontextureNORMAL.png' );
+var marstextureNORMAL = new THREE.TextureLoader().load( 'visuals/normals/marstextureNORMAL.png' );
+var marscloudmeshNORMAL = new THREE.TextureLoader().load( 'visuals/normals/marscloudmapNORMAL.png' );
+var marsmoon1textureNORMAL = new THREE.TextureLoader().load( 'visuals/normals/marsmoon1textureNORMAL.png' );
+var marsmoon2textureNORMAL = new THREE.TextureLoader().load( 'visuals/normals/marsmoon2textureNORMAL.png' );
+var jupitertextureNORMAL = new THREE.TextureLoader().load( 'visuals/normals/jupitertextureNORMAL.png' );
+var jupitercloudmeshNORMAL = new THREE.TextureLoader().load( 'visuals/normals/jupitercloudmapNORMAL.png' );
+var saturntextureNORMAL = new THREE.TextureLoader().load( 'visuals/normals/saturntextureNORMAL.png' );
+var saturncloudmeshNORMAL = new THREE.TextureLoader().load( 'visuals/normals/saturncloudmapNORMAL.png' );
+var uranustextureNORMAL = new THREE.TextureLoader().load( 'visuals/normals/uranustextureNORMAL.png' );
+var uranuscloudmeshNORMAL = new THREE.TextureLoader().load( 'visuals/normals/uranuscloudmapNORMAL.png' );
+var neptunetextureNORMAL = new THREE.TextureLoader().load( 'visuals/normals/neptunetextureNORMAL.png' );
+var neptunecloudmeshNORMAL = new THREE.TextureLoader().load( 'visuals/normals/neptunecloudmapNORMAL.png' );
 
 //html file will call main on load
 function main()
@@ -54,13 +54,14 @@ function main()
 	setupGui();
 	setupPlanetText();
 	setupRaycasting();
+	createGithubGui();
 	render();
 
 }
 
 
-//basic three setup with orbital controls, gui and font loader
-var scene, renderer, camera, controls, gui, loader;
+//basic three setup with orbital controls and font loader
+var scene, renderer, camera, controls, loader;
 
 function basicSetup()
 {
@@ -232,7 +233,7 @@ function stylizePlanets()
 	//rings for all planets Jupiter until Neptune
 	var sizes1=[2.2,2,1.6,1.7];
 	var sizes2=[3,2.9,2.0,2.4];
-	var rotations = [11,90,20,90]
+	var rotations = [10.9,90,20,90]
 	var texts=[jupitertexture,saturntexture,uranustexture,neptunetexture];
 	var norms=[jupitertextureNORMAL,saturntextureNORMAL,uranustextureNORMAL,neptunetextureNORMAL];
 
@@ -466,11 +467,6 @@ function render() {
 	 
 	 }
 
-
-
-
-
-  
   renderer.render(scene, camera);
 }
 
@@ -531,8 +527,8 @@ function setupGui()
 	 
 }
 
-//when a planet is chosen on gui, it is locked and all other planets are unlocked
-//freeroam is then set to false
+//when a planet is chosen on gui, it is locked on and all other planets are unlocked
+//freeroam is set to false
 function focus(planet)
 {
 	freeRoam=false;
@@ -551,14 +547,11 @@ function focus(planet)
 }
 
 
-var camrotate=false;
+
 //if a user choose to use orbtal controls, planetlock is disabled
 document.addEventListener("mousedown", function(event){
 
-
-
     freeRoam=true
-
 
     guiElements.PLANETLOCK="          DISABLED"
 
@@ -583,7 +576,7 @@ function distanceVector( v1 , v2 )
 
 
 
-//_____________________________________IN PROGRESS_________________________________
+
 
 var suntext, mercurytext, venustext, earthtext, earthmoontext,marstext,marsmoon1text,marsmoon2text,
 jupitertext,saturntext,uranustext,neptunenext;
@@ -896,6 +889,30 @@ window.addEventListener("load", function () {
 
 });
 
-
-
 	
+function createGithubGui()
+{
+
+
+var gui = new dat.GUI({ autoPlace: false });
+
+
+var customContainer = document.getElementById('my-gui-container');
+customContainer.appendChild(gui.domElement);
+
+
+
+	guiElements2 =  new function() {
+		
+	  this.GITHUB = "https://github.com/Alimalik2000/Solar.js";
+	  this.Sun = function(){};
+	
+	};
+	
+	 var pt =  gui.add(guiElements2, 'GITHUB');
+	  pt.onChange(function(value) {window.open("https://github.com/Alimalik2000/Solar.js"); ;});
+
+
+}
+
+
