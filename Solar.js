@@ -40,6 +40,8 @@ var uranuscloudmeshNORMAL = new THREE.TextureLoader().load( 'visuals/normals/ura
 var neptunetextureNORMAL = new THREE.TextureLoader().load( 'visuals/normals/neptunetextureNORMAL.png' );
 var neptunecloudmeshNORMAL = new THREE.TextureLoader().load( 'visuals/normals/neptunecloudmapNORMAL.png' );
 
+
+
 //html file will call main on load
 function main()
 {	
@@ -58,6 +60,7 @@ function main()
 	render();
 
 }
+
 
 
 //basic three setup with orbital controls and font loader
@@ -82,6 +85,7 @@ function basicSetup()
 }
 
 
+
 //creates only point of light in scene, from inside of the sun
 //as well as a low ambiance
 function createLight()
@@ -94,17 +98,19 @@ function createLight()
 	var lightsrc = new THREE.SphereGeometry(.001, 1, 1);
 	var sunLight = new THREE.PointLight(0xffffff);
 
-	sunLight.position.set(0, 0, 0); 
-	sunLight.castShadow = true; 
-	sunLight.shadowMapWidth = 1024; 
-	sunLight.shadowMapHeight = 1024; 
-	sunLight.shadowCameraNear = 500; 
-	sunLight.shadowCameraFar = 4000;
-	sunLight.add(new THREE.Mesh(lightsrc, new THREE.MeshBasicMaterial({ color: 0x000000 })));
-	sunLight.shadowCameraFov = 30;
+		sunLight.position.set(0, 0, 0); 
+		sunLight.castShadow = true; 
+		sunLight.shadowMapWidth = 1024; 
+		sunLight.shadowMapHeight = 1024; 
+		sunLight.shadowCameraNear = 500; 
+		sunLight.shadowCameraFar = 4000;
+		sunLight.add(new THREE.Mesh(lightsrc, new THREE.MeshBasicMaterial({ color: 0x000000 })));
+		sunLight.shadowCameraFov = 30;
+	
 	scene.add(sunLight);
 
 }
+
 
 
 //creates the sun in the scene and 100 glowing layers around it
@@ -139,15 +145,16 @@ function createSun()
 }
 
 
+
 //creates all planets in the scene, inside an array
-//array planets are the planets in order from Mercury to Neptune
+//array planets are planets in order from Mercury to Neptune
 var planets=[];
 
 function createPlanets()
 {
 
 	//planets in order from mercury to neptune with respective sizes, textures and normals
-	//plents positions are set in render()
+	//planets positions are set in render()
 	// Mercury -> Venus -> Earth -> Jupiter -> Saturn -> Uranus -> Neptune
 	var sizes = [.3,.4,.6,.5,2,1.2,1,1]
 	var maps=[mercurytexture,venustexture,earthtexture, marstexture,jupitertexture,saturntexture,uranustexture,neptunetexture];
@@ -165,10 +172,64 @@ function createPlanets()
 
 }
 
+
+//adds clouds to all planets with an atmosphere and rings to all planets with rings
+var clouds=[];
+var rings=[];
+
+function stylizePlanets()
+{
+
+	//clouds for all planets Venus until Neptune, Mercury does NOT have an atmosphere
+	var sizes=[.41,.61,.51,2.02,1.21,1.02,1.02];
+	var texts=[venuscloudmesh,earthcloudmesh,marscloudmesh,jupitercloudmesh,saturncloudmesh,uranuscloudmesh,neptunecloudmesh];
+	var norms=[venuscloudmeshNORMAL,earthcloudmeshNORMAL,marscloudmeshNORMAL,jupitercloudmeshNORMAL,saturncloudmeshNORMAL,uranuscloudmeshNORMAL,neptunecloudmeshNORMAL];
+	var opac=[.3,.2,.3,.3,.15,.1,.15];
+
+	for(var i=0;i<7;i++)
+	{
+
+		geometry   = new THREE.SphereGeometry(sizes[i], 20, 20);
+		material  = new THREE.MeshPhongMaterial({map :texts[i], normalMap: norms[i],
+  		opacity     : opac[i], transparent : true, })
+
+		if(i==1) // Earths cloud layer does not have a normal
+		{
+			material  = new THREE.MeshPhongMaterial({map :texts[i],
+  			opacity     : opac[i], transparent : true, })
+		}
+
+		clouds[i] = new THREE.Mesh(geometry, material);
+		planets[i+1].add(clouds[i]);
+
+	}
+
+	//rings for all planets Jupiter until Neptune
+	var sizes1=[2.2,2,1.6,1.7];
+	var sizes2=[3,2.9,2.0,2.4];
+	var rotations = [10.9,90,20,90]
+	var texts=[jupitertexture,saturntexture,uranustexture,neptunetexture];
+	var norms=[jupitertextureNORMAL,saturntextureNORMAL,uranustextureNORMAL,neptunetextureNORMAL];
+
+	for(var i=0;i<4;i++)
+	{
+
+		geometry = new THREE.RingGeometry( sizes1[i], sizes2[i], 32 );
+		material = new THREE.MeshPhongMaterial( { map:texts[i], normalMap: norms[i], side: THREE.DoubleSide, opacity: 0.5} );
+		rings[i] = new THREE.Mesh( geometry, material );
+		rings[i].rotation.x=rotations[i];
+		scene.add( rings[i] );
+	
+	}
+
+}
+
+
+
 //creates all moons in scene
 var earthmoon;
 //array holds moons from Phobos until Deimos
-var moons =[];
+var moons = [];
 
 function createMoons()
 {
@@ -193,59 +254,6 @@ function createMoons()
 		moons[i] = new THREE.Mesh( geometry, material );
 		scene.add(moons[i]);
 
-	}
-
-}
-
-
-
-//adds clouds to all planets with an atmosphere and rings to all planets with rings
-var clouds=[];
-var rings=[];
-
-function stylizePlanets()
-{
-
-	//clouds for all planets venus until Neptune
-	var sizes=[.41,.61,.51,2.02,1.21,1.02,1.02];
-	var texts=[venuscloudmesh,earthcloudmesh,marscloudmesh,jupitercloudmesh,saturncloudmesh,uranuscloudmesh,neptunecloudmesh];
-	var norms=[venuscloudmeshNORMAL,earthcloudmeshNORMAL,marscloudmeshNORMAL,jupitercloudmeshNORMAL,saturncloudmeshNORMAL,uranuscloudmeshNORMAL,neptunecloudmeshNORMAL];
-	var opac=[.3,.2,.3,.3,.15,.1,.15];
-	for(var i=0;i<7;i++)
-	{
-		geometry   = new THREE.SphereGeometry(sizes[i], 20, 20);
-		material  = new THREE.MeshPhongMaterial({map :texts[i], normalMap: norms[i],
-  		opacity     : opac[i], transparent : true,
-		})
-		if(i==1)
-		{
-			material  = new THREE.MeshPhongMaterial({map :texts[i],
-  		opacity     : opac[i], transparent : true,
-		})
-		}
-
-		clouds[i] = new THREE.Mesh(geometry, material);
-		planets[i+1].add(clouds[i]);
-
-
-	}
-
-	//rings for all planets Jupiter until Neptune
-	var sizes1=[2.2,2,1.6,1.7];
-	var sizes2=[3,2.9,2.0,2.4];
-	var rotations = [10.9,90,20,90]
-	var texts=[jupitertexture,saturntexture,uranustexture,neptunetexture];
-	var norms=[jupitertextureNORMAL,saturntextureNORMAL,uranustextureNORMAL,neptunetextureNORMAL];
-
-	for(var i=0;i<4;i++)
-	{
-
-		geometry = new THREE.RingGeometry( sizes1[i], sizes2[i], 32 );
-		material = new THREE.MeshPhongMaterial( { map:texts[i], normalMap: norms[i], side: THREE.DoubleSide, opacity: 0.5} );
-		rings[i] = new THREE.Mesh( geometry, material );
-		rings[i].rotation.x=rotations[i];
-		scene.add( rings[i] );
-	
 	}
 
 }
@@ -430,7 +438,7 @@ function render() {
   //planet lock system
   //distance from each planet/sun camera will be
   var lockdistance=[21,3,4,5,4,10,9,9,9]
-  //speed camera will revolve around each planet/sun
+  //speed camera will revolve around planet/sun
   var lockspeed=[1,1,4,2,2,2,2,2,2]
   if(freeRoam==false)
   {
@@ -472,7 +480,7 @@ function render() {
 
 
 
-//gui to lock planets
+//gui to lock on planets
 var guiElements;
 function setupGui()
 {
@@ -496,8 +504,10 @@ function setupGui()
 
 	};
 	
+	 //string indicating wether or not planet lock is enabled
 	 var PT =  guiDisplay.add(guiElements, 'PLANETLOCK').listen();
 
+	 //if a planet is clicked function focus is called to planet lock
 	 var sun1 =  guiDisplay.add(guiElements, 'Sun');
 	 sun1.onChange(function(value) {focus("sun");});
 
@@ -578,8 +588,12 @@ function distanceVector( v1 , v2 )
 
 
 
+
 var suntext, mercurytext, venustext, earthtext, earthmoontext,marstext,marsmoon1text,marsmoon2text,
 jupitertext,saturntext,uranustext,neptunenext;
+
+var planettexts=[];
+
 
 function setupPlanetText()
 {
@@ -589,10 +603,12 @@ function setupPlanetText()
 
 	var textGeometry;
 
+
+
 	
 
 	
-  loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+  loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
 	    textGeometry = new THREE.TextGeometry( "Sun", {font: font,
 	    size: 1.0,
 	    height: .1,
@@ -605,7 +621,7 @@ function setupPlanetText()
 	  suntext.visible=false;
 	});   
 
-   loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+   loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
 	    textGeometry = new THREE.TextGeometry( "Mercury", {font: font,
 	    size: 1.0,
 	    height: .1,
@@ -617,7 +633,7 @@ function setupPlanetText()
 	  mercurytext.visible=false;
 	});   
 
-    loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+    loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
 	    textGeometry = new THREE.TextGeometry( "Venus", {font: font,
 	    size: 1.0,
 	    height: .1,
@@ -629,7 +645,7 @@ function setupPlanetText()
 	  venustext.visible=false;
 	});   
 
-	 loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	 loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
 	    textGeometry = new THREE.TextGeometry( "Earth", {font: font,
 	    size: 1.0,
 	    height: .1,
@@ -641,7 +657,7 @@ function setupPlanetText()
 	  earthtext.visible=false;
 	});   
 
-	  loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	  loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
 	    textGeometry = new THREE.TextGeometry( "Moon", {font: font,
 	    size: 1.0,
 	    height: .1,
@@ -653,7 +669,7 @@ function setupPlanetText()
 	  earthmoontext.visible=false;
 	});   
 
-	   loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	   loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
 	    textGeometry = new THREE.TextGeometry( "Mars", {font: font,
 	    size: 1.0,
 	    height: .1,
@@ -665,7 +681,7 @@ function setupPlanetText()
 	  marstext.visible=false;
 	});   
 
-	    loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	    loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
 	    textGeometry = new THREE.TextGeometry( "Phobos", {font: font,
 	    size: 1.0,
 	    height: .1,
@@ -677,7 +693,7 @@ function setupPlanetText()
 	  marsmoon1text.visible=false;
 	});
 
-	 loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	 loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
 	    textGeometry = new THREE.TextGeometry( "Deimos", {font: font,
 	    size: 1.0,
 	    height: .1,
@@ -689,7 +705,7 @@ function setupPlanetText()
 	  marsmoon2text.visible=false;
 	});    
 
-	  loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	  loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
 	    textGeometry = new THREE.TextGeometry( "Jupiter", {font: font,
 	    size: 1.0,
 	    height: .1,
@@ -701,7 +717,7 @@ function setupPlanetText()
 	  jupitertext.visible=false;
 	});   
 
-	   loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	   loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
 	    textGeometry = new THREE.TextGeometry( "Saturn", {font: font,
 	    size: 1.0,
 	    height: .1,
@@ -713,7 +729,7 @@ function setupPlanetText()
 	  saturntext.visible=false;
 	});
 
-	    loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	    loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
 	    textGeometry = new THREE.TextGeometry( "Uranus", {font: font,
 	    size: 1.0,
 	    height: .1,
@@ -725,7 +741,7 @@ function setupPlanetText()
 	  uranustext.visible=false;
 	});   
 
-	     loader.load( 'helvetiker_regular.typeface.json', function ( font ) {
+	     loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
 	    textGeometry = new THREE.TextGeometry( "Neptune", {font: font,
 	    size: 1.0,
 	    height: .1,
@@ -742,6 +758,7 @@ function setupPlanetText()
 
 
 }
+
 
 
 
@@ -766,6 +783,10 @@ document.addEventListener("mousemove", function(event){
 
 var lockon=false;
 
+var planetandsuntexts=[suntext,mercurytext,venustext,earthtext,earthmoontext,marstext,marsmoon1text,marsmoon2text,jupitertext,
+   saturntext,uranustext,neptunenext];
+
+
 function render2() {
 	window.requestAnimationFrame(render2);
 
@@ -775,9 +796,11 @@ function render2() {
 	// calculate objects intersecting the picking ray
 	var intersects = raycaster.intersectObjects( scene.children );
 
-	
+
 
 	for ( var i = 0; i < intersects.length; i++ ) {
+
+
 
 
 		if(intersects[ i ].object.id==sun.id)
