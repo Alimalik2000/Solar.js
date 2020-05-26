@@ -56,7 +56,7 @@ function main()
 	setupGui();
 	setupPlanetText();
 	setupRaycasting();
-	createGithubGui();
+	createGitHubGui();
 	render();
 
 }
@@ -71,8 +71,7 @@ function basicSetup()
 	
 	scene = new THREE.Scene();
 
-	camera = new THREE.PerspectiveCamera(45,
-	window.innerWidth/window.innerHeight, 0.1, 1000);
+	camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
 
 	renderer = new THREE.WebGLRenderer();
 	renderer.setSize(window.innerWidth, window.innerHeight);
@@ -119,7 +118,7 @@ var sun;
 function createSun()
 {
 
-	//sun 
+	//Sun 
 	var geometry = new THREE.SphereGeometry(2.70, 50, 50);
 	var material = new THREE.MeshBasicMaterial( { map:suntexture} );
 	sun = new THREE.Mesh( geometry, material );
@@ -260,12 +259,11 @@ function createMoons()
 
 
 
-//creates background of scene, blue ans white stars
+//creates background of scene, blue and white stars
 var bluestars, particles;
 
 function createBackground()
 {
-	
 
 	//blue stars
 	var geometry = new THREE.SphereGeometry(.6, 8, 8);
@@ -291,6 +289,7 @@ function createBackground()
 		}
 	}
 
+
 	//white stars
 	var geometry2 = new THREE.Geometry();
 	scene.fog = new THREE.FogExp2( 0x000000, 0.001 );  
@@ -313,7 +312,370 @@ function createBackground()
 	particles = new THREE.ParticleSystem( geometry2, material );
 	scene.add( particles ); 
 
+
+	//helper method to find distance bewteen two vectors of size three
+	function distanceVector( v1 , v2 )
+	{
+	    var dx = v1.x - v2.x;
+	    var dy = v1.y - v2.y;
+	    var dz = v1.z - v2.z;
+
+	    return Math.sqrt( dx * dx + dy * dy + dz * dz );
+	}
+
 }
+
+
+
+//gui to lock on planets
+var guiElements;
+function setupGui()
+{
+
+	var guiDisplay = new dat.GUI({
+    height : 5 * 32 - 1
+	});
+
+	  guiElements =  new function() {
+		
+	  this.PLANETLOCK = "          ENABLED";
+	  this.Sun = function(){};
+	  this.Mercury= function(){};
+	  this.Venus= function(){};
+	  this.Earth= function(){};
+	  this.Mars= function(){};
+	  this.Jupiter= function(){};
+	  this.Saturn= function(){};
+	  this.Uranus= function(){};
+	  this.Neptune= function(){};
+
+	};
+	
+	 //string indicating wether or not planet lock is enabled
+	 var PT =  guiDisplay.add(guiElements, 'PLANETLOCK').listen();
+
+	 //if a planet is clicked function focus is called to planet lock
+	 var sun1 =  guiDisplay.add(guiElements, 'Sun');
+	 sun1.onChange(function(value) {focus("sun");});
+
+	 var mercury1 =  guiDisplay.add(guiElements, 'Mercury');
+	 mercury1.onChange(function(value) {focus("mercury");});
+
+	  var venus1 =  guiDisplay.add(guiElements, 'Venus');
+	 venus1.onChange(function(value) {focus("venus");});
+
+	  var earth1 =  guiDisplay.add(guiElements, 'Earth');
+	 earth1.onChange(function(value) {focus("earth");});
+
+	 var mars1 =  guiDisplay.add(guiElements, 'Mars');
+	 mars1.onChange(function(value) {focus("mars");});
+
+	  var jupiter1 =  guiDisplay.add(guiElements, 'Jupiter');
+	 jupiter1.onChange(function(value) {focus("jupiter");});
+
+	  var saturn1 =  guiDisplay.add(guiElements, 'Saturn');
+	 saturn1.onChange(function(value) {focus("saturn");});
+
+	  var uranus1 =  guiDisplay.add(guiElements, 'Uranus');
+	 uranus1.onChange(function(value) {focus("uranus");});
+
+	  var neptune1 =  guiDisplay.add(guiElements, 'Neptune');
+	 neptune1.onChange(function(value) {focus("neptune");});
+	 
+}
+
+//when a planet is chosen on gui, it is locked on and all other planets are unlocked
+//and freeroam is set to false
+function focus(planet)
+{
+	freeRoam=false;
+
+	guiElements.PLANETLOCK="          ENABLED";
+	if(planet=="sun")locksunandplanets[0]=true;
+	if(planet=="mercury")locksunandplanets[1]=true;
+	if(planet=="venus")locksunandplanets[2]=true;
+	if(planet=="earth")locksunandplanets[3]=true;
+	if(planet=="mars")locksunandplanets[4]=true;
+	if(planet=="jupiter")locksunandplanets[5]=true;
+	if(planet=="saturn")locksunandplanets[6]=true;
+	if(planet=="uranus")locksunandplanets[7]=true;
+	if(planet=="neptune")locksunandplanets[8]=true;
+
+}
+
+
+
+//if a user choose to use orbtal controls, planetlock is disabled and freeroam is enabled
+document.addEventListener("mousedown", function(event)
+{
+
+    freeRoam=true
+
+    guiElements.PLANETLOCK="          DISABLED"
+
+    for(var i=0;i<9;i++)
+    {
+    	//boolean array of the sun and planets, if planet is locked on that elemnt is set to true
+    	locksunandplanets[i]=false;
+    }
+
+});
+
+
+//textgeometry to apprear above planet when mouse if hovered on, due to editing visiblity and other factors
+//textgeotry could not be created on using loops or in an array
+var suntext, mercurytext, venustext, earthtext, earthmoontext,marstext,marsmoon1text,marsmoon2text,
+jupitertext,saturntext,uranustext,neptunenext;
+
+function setupPlanetText()
+{
+	var textMaterial = new THREE.MeshBasicMaterial( 
+    { color: 0xffffff,transparent: true }
+  );
+
+	var textGeometry;
+	//textgeometry cabnot change size or "text" so it to be declared indivually for every element, loops were
+	//causing issues as well so this was the best course of action
+	
+    loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
+	  textGeometry = new THREE.TextGeometry( "Sun", {font: font, size: 1.0, height: .1, curveSegments: 5});
+	  suntext = new THREE.Mesh( textGeometry, textMaterial );
+	  suntext.position.y+=3.5;
+	  suntext.lookAt(camera.position);
+	  sun.add( suntext );
+	  suntext.visible=false; });   
+    loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
+	  textGeometry = new THREE.TextGeometry( "Mercury", {font: font, size: 1.0, height: .1, curveSegments: 5});
+	  mercurytext = new THREE.Mesh( textGeometry, textMaterial );
+	  mercurytext.position.y+=.5;
+	  planets[0].add( mercurytext );
+	  mercurytext.visible=false; });   
+    loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
+	  textGeometry = new THREE.TextGeometry( "Venus", {font: font, size: 1.0, height: .1, curveSegments: 5});
+	  venustext = new THREE.Mesh( textGeometry, textMaterial );
+	  venustext.position.y+=.5;
+	  planets[1].add( venustext );
+	  venustext.visible=false; });   
+	loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
+	  textGeometry = new THREE.TextGeometry( "Earth", {font: font, size: 1.0, height: .1, curveSegments: 5});
+	  earthtext = new THREE.Mesh( textGeometry, textMaterial );
+	  earthtext.position.y+=.75;
+	  planets[2].add( earthtext );
+	  earthtext.visible=false; });   
+	loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
+      textGeometry = new THREE.TextGeometry( "Moon", {font: font, size: 1.0, height: .1, curveSegments: 5});
+	  earthmoontext = new THREE.Mesh( textGeometry, textMaterial );
+	  earthmoontext.position.y+=.5;
+	  earthmoon.add( earthmoontext );
+	  earthmoontext.visible=false; });   
+	loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
+      textGeometry = new THREE.TextGeometry( "Mars", {font: font, size: 1.0, height: .1, curveSegments: 5});
+	  marstext = new THREE.Mesh( textGeometry, textMaterial );
+	  marstext.position.y+=1;
+	  planets[3].add( marstext );
+	  marstext.visible=false; });   
+	loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
+	  textGeometry = new THREE.TextGeometry( "Phobos", {font: font, size: 1.0, height: .1, curveSegments: 5});
+	  marsmoon1text = new THREE.Mesh( textGeometry, textMaterial );
+	  marsmoon1text.position.y+=.5;
+	  moons[0].add( marsmoon1text );
+	  marsmoon1text.visible=false; });
+	loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
+	  textGeometry = new THREE.TextGeometry( "Diemos", {font: font, size: 1.0, height: .1, curveSegments: 5});
+	  marsmoon2text = new THREE.Mesh( textGeometry, textMaterial );
+	  marsmoon2text.position.y+=.5;
+	  moons[1].add( marsmoon2text );
+	  marsmoon2text.visible=false; });    
+	loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
+	  textGeometry = new THREE.TextGeometry( "Jupiter", {font: font, size: 1.0, height: .1, curveSegments: 5});
+	  jupitertext = new THREE.Mesh( textGeometry, textMaterial );
+	  jupitertext.position.y+=2;
+	  planets[4].add( jupitertext );
+	  jupitertext.visible=false; });   
+	loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
+	  textGeometry = new THREE.TextGeometry( "Saturn", {font: font, size: 1.0, height: .1, curveSegments: 5});
+	  saturntext = new THREE.Mesh( textGeometry, textMaterial );
+	  saturntext.position.y+=1.5;
+	  planets[5].add( saturntext );
+	  saturntext.visible=false; });
+	loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
+	  textGeometry = new THREE.TextGeometry( "Uranus", {font: font, size: 1.0, height: .1, curveSegments: 5});
+	  uranustext = new THREE.Mesh( textGeometry, textMaterial );
+	  uranustext.position.y+=1.5;
+	  planets[6].add( uranustext );
+	  uranustext.visible=false; });   
+	loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
+	  textGeometry = new THREE.TextGeometry( "Neptune", {font: font, size: 1.0, height: .1, curveSegments: 5});
+	  neptunetext = new THREE.Mesh( textGeometry, textMaterial );
+	  neptunetext.position.y+=1;
+	  planets[7].add( neptunetext );
+	  neptunetext.visible=false; });   
+
+}
+
+
+
+//setup raycasting, when the mouse is able to ponpoint objects in the scene
+//here it is used to show the name of planets above them
+var raycaster, mouse;
+
+function setupRaycasting()
+{
+	raycaster = new THREE.Raycaster();
+	mouse = new THREE.Vector2();
+
+	//render2 reursivly calls the raycaster
+	render2();
+}
+
+
+
+//helper function to get the location of moouse on the scene
+document.addEventListener("mousemove", function(event){
+
+	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+});
+
+
+
+//recurivly checks what the mouse is hovering over
+function render2() {
+
+	window.requestAnimationFrame(render2);
+
+	// update the picking ray with the camera and mouse position
+	raycaster.setFromCamera( mouse, camera );
+
+	// calculate objects intersecting the picking ray
+	var intersects = raycaster.intersectObjects( scene.children );
+
+
+
+	for ( var i = 0; i < intersects.length; i++ ) {
+
+		if(intersects[ i ].object.id==sun.id)
+		{
+			suntext.lookAt(camera.position);
+  			suntext.visible=true;
+  			setTimeout(function(){ suntext.visible=false }, 1500);
+		}
+		else if(intersects[ i ].object.id==planets[0].id)
+		{
+			mercurytext.lookAt(camera.position);
+  			mercurytext.visible=true;
+  			setTimeout(function(){ mercurytext.visible=false }, 1500);
+		}
+		else if(intersects[ i ].object.id==planets[1].id)
+		{
+			venustext.lookAt(camera.position);
+  			venustext.visible=true;
+  			setTimeout(function(){ venustext.visible=false }, 1500);
+		}
+		else if(intersects[ i ].object.id==planets[2].id)
+		{
+			earthtext.lookAt(camera.position);
+  			earthtext.visible=true;
+  			setTimeout(function(){ earthtext.visible=false }, 1500);
+		}
+		else if(intersects[ i ].object.id==earthmoon.id)
+		{
+			earthmoontext.lookAt(camera.position);
+  			earthmoontext.visible=true;
+  			setTimeout(function(){ earthmoontext.visible=false }, 1500);
+		}
+		else if(intersects[ i ].object.id==planets[3].id)
+		{
+			marstext.lookAt(camera.position);
+  			marstext.visible=true;
+  			setTimeout(function(){ marstext.visible=false }, 1500);
+		}
+		else if(intersects[ i ].object.id==moons[0].id)
+		{
+			marsmoon1text.lookAt(camera.position);
+  			marsmoon1text.visible=true;
+  			setTimeout(function(){ marsmoon1text.visible=false }, 1500);
+		}
+		else if(intersects[ i ].object.id==moons[1].id)
+		{
+			marsmoon2text.lookAt(camera.position);
+  			marsmoon2text.visible=true;
+  			setTimeout(function(){ marsmoon2text.visible=false }, 1500);
+		}
+		else if(intersects[ i ].object.id==planets[4].id)
+		{
+			jupitertext.lookAt(camera.position);
+  			jupitertext.visible=true;
+  			setTimeout(function(){ jupitertext.visible=false }, 1500);
+		}
+		else if(intersects[ i ].object.id==planets[5].id)
+		{
+			saturntext.lookAt(camera.position);
+  			saturntext.visible=true;
+  			setTimeout(function(){ saturntext.visible=false }, 1500);
+		}
+		else if(intersects[ i ].object.id==planets[6].id)
+		{
+			uranustext.lookAt(camera.position);
+  			uranustext.visible=true;
+  			setTimeout(function(){ uranustext.visible=false }, 1500);
+		}
+		else if(intersects[ i ].object.id==planets[7].id)
+		{
+			neptunetext.lookAt(camera.position);
+  			neptunetext.visible=true;
+  			setTimeout(function(){ neptunetext.visible=false }, 1500);
+		}
+		else
+		{
+			lockon=false;
+		}
+	
+	}
+
+	renderer.render( scene, camera );
+
+}
+
+
+
+window.addEventListener("load", function () {
+
+    
+ 	const loader = document.querySelector(".loader");
+	   loader.className += " hidden"; // class "loader hidden"
+
+
+
+});
+
+	
+function createGitHubGui()
+{
+
+
+ var gui = new dat.GUI({ autoPlace: false });
+
+
+var customContainer = document.getElementById('my-gui-container');
+customContainer.appendChild(gui.domElement);
+
+
+
+	guiElements2 =  new function() {
+		
+	  this.GITHUB = "https://github.com/Alimalik2000/Solar.js";
+	  this.Sun = function(){};
+	
+	};
+	
+	 var pt =  gui.add(guiElements2, 'GITHUB');
+	  pt.onChange(function(value) {window.open("https://github.com/Alimalik2000/Solar.js"); ;});
+
+
+}
+
 
 
 
@@ -477,465 +839,3 @@ function render() {
 
   renderer.render(scene, camera);
 }
-
-
-
-//gui to lock on planets
-var guiElements;
-function setupGui()
-{
-
-	var guiDisplay = new dat.GUI({
-    height : 5 * 32 - 1
-	});
-
-	guiElements =  new function() {
-		
-	  this.PLANETLOCK = "          ENABLED";
-	  this.Sun = function(){};
-	  this.Mercury= function(){};
-	  this.Venus= function(){};
-	  this.Earth= function(){};
-	  this.Mars= function(){};
-	  this.Jupiter= function(){};
-	  this.Saturn= function(){};
-	  this.Uranus= function(){};
-	  this.Neptune= function(){};
-
-	};
-	
-	 //string indicating wether or not planet lock is enabled
-	 var PT =  guiDisplay.add(guiElements, 'PLANETLOCK').listen();
-
-	 //if a planet is clicked function focus is called to planet lock
-	 var sun1 =  guiDisplay.add(guiElements, 'Sun');
-	 sun1.onChange(function(value) {focus("sun");});
-
-	 var mercury1 =  guiDisplay.add(guiElements, 'Mercury');
-	 mercury1.onChange(function(value) {focus("mercury");});
-
-	  var venus1 =  guiDisplay.add(guiElements, 'Venus');
-	 venus1.onChange(function(value) {focus("venus");});
-
-	  var earth1 =  guiDisplay.add(guiElements, 'Earth');
-	 earth1.onChange(function(value) {focus("earth");});
-
-	 var mars1 =  guiDisplay.add(guiElements, 'Mars');
-	 mars1.onChange(function(value) {focus("mars");});
-
-	  var jupiter1 =  guiDisplay.add(guiElements, 'Jupiter');
-	 jupiter1.onChange(function(value) {focus("jupiter");});
-
-	  var saturn1 =  guiDisplay.add(guiElements, 'Saturn');
-	 saturn1.onChange(function(value) {focus("saturn");});
-
-	  var uranus1 =  guiDisplay.add(guiElements, 'Uranus');
-	 uranus1.onChange(function(value) {focus("uranus");});
-
-	  var neptune1 =  guiDisplay.add(guiElements, 'Neptune');
-	 neptune1.onChange(function(value) {focus("neptune");});
-	 
-}
-
-//when a planet is chosen on gui, it is locked on and all other planets are unlocked
-//freeroam is set to false
-function focus(planet)
-{
-	freeRoam=false;
-
-	guiElements.PLANETLOCK="          ENABLED";
-	if(planet=="sun")locksunandplanets[0]=true;
-	if(planet=="mercury")locksunandplanets[1]=true;
-	if(planet=="venus")locksunandplanets[2]=true;
-	if(planet=="earth")locksunandplanets[3]=true;
-	if(planet=="mars")locksunandplanets[4]=true;
-	if(planet=="jupiter")locksunandplanets[5]=true;
-	if(planet=="saturn")locksunandplanets[6]=true;
-	if(planet=="uranus")locksunandplanets[7]=true;
-	if(planet=="neptune")locksunandplanets[8]=true;
-
-}
-
-
-
-//if a user choose to use orbtal controls, planetlock is disabled
-document.addEventListener("mousedown", function(event){
-
-    freeRoam=true
-
-    guiElements.PLANETLOCK="          DISABLED"
-
-    for(var i=0;i<9;i++)
-    {
-    	locksunandplanets[i]=false;
-    }
-
-});
-
-
-//helper method to find distance bewteen two vectors of size three
-function distanceVector( v1 , v2 )
-{
-    var dx = v1.x - v2.x;
-    var dy = v1.y - v2.y;
-    var dz = v1.z - v2.z;
-
-    return Math.sqrt( dx * dx + dy * dy + dz * dz );
-}
-
-
-
-
-
-
-
-var suntext, mercurytext, venustext, earthtext, earthmoontext,marstext,marsmoon1text,marsmoon2text,
-jupitertext,saturntext,uranustext,neptunenext;
-
-var planettexts=[];
-
-
-function setupPlanetText()
-{
-	var textMaterial = new THREE.MeshBasicMaterial( 
-    { color: 0xffffff,transparent: true }
-  );
-
-	var textGeometry;
-
-
-
-	
-
-	
-  loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
-	    textGeometry = new THREE.TextGeometry( "Sun", {font: font,
-	    size: 1.0,
-	    height: .1,
-	    curveSegments: 5,
-	  });
-	  suntext = new THREE.Mesh( textGeometry, textMaterial );
-	  suntext.position.y+=3.5;
-	  suntext.lookAt(camera.position);
-	  sun.add( suntext );
-	  suntext.visible=false;
-	});   
-
-   loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
-	    textGeometry = new THREE.TextGeometry( "Mercury", {font: font,
-	    size: 1.0,
-	    height: .1,
-	    curveSegments: 5,
-	  });
-	  mercurytext = new THREE.Mesh( textGeometry, textMaterial );
-	  mercurytext.position.y+=.5;
-	  planets[0].add( mercurytext );
-	  mercurytext.visible=false;
-	});   
-
-    loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
-	    textGeometry = new THREE.TextGeometry( "Venus", {font: font,
-	    size: 1.0,
-	    height: .1,
-	    curveSegments: 5,
-	  });
-	  venustext = new THREE.Mesh( textGeometry, textMaterial );
-	  venustext.position.y+=.5;
-	  planets[1].add( venustext );
-	  venustext.visible=false;
-	});   
-
-	 loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
-	    textGeometry = new THREE.TextGeometry( "Earth", {font: font,
-	    size: 1.0,
-	    height: .1,
-	    curveSegments: 5,
-	  });
-	  earthtext = new THREE.Mesh( textGeometry, textMaterial );
-	  earthtext.position.y+=.75;
-	  planets[2].add( earthtext );
-	  earthtext.visible=false;
-	});   
-
-	  loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
-	    textGeometry = new THREE.TextGeometry( "Moon", {font: font,
-	    size: 1.0,
-	    height: .1,
-	    curveSegments: 5,
-	  });
-	  earthmoontext = new THREE.Mesh( textGeometry, textMaterial );
-	  earthmoontext.position.y+=.5;
-	  earthmoon.add( earthmoontext );
-	  earthmoontext.visible=false;
-	});   
-
-	   loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
-	    textGeometry = new THREE.TextGeometry( "Mars", {font: font,
-	    size: 1.0,
-	    height: .1,
-	    curveSegments: 5,
-	  });
-	  marstext = new THREE.Mesh( textGeometry, textMaterial );
-	  marstext.position.y+=1;
-	  planets[3].add( marstext );
-	  marstext.visible=false;
-	});   
-
-	    loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
-	    textGeometry = new THREE.TextGeometry( "Phobos", {font: font,
-	    size: 1.0,
-	    height: .1,
-	    curveSegments: 5,
-	  });
-	  marsmoon1text = new THREE.Mesh( textGeometry, textMaterial );
-	  marsmoon1text.position.y+=.5;
-	  moons[0].add( marsmoon1text );
-	  marsmoon1text.visible=false;
-	});
-
-	 loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
-	    textGeometry = new THREE.TextGeometry( "Deimos", {font: font,
-	    size: 1.0,
-	    height: .1,
-	    curveSegments: 5,
-	  });
-	  marsmoon2text = new THREE.Mesh( textGeometry, textMaterial );
-	  marsmoon2text.position.y+=.5;
-	  moons[1].add( marsmoon2text );
-	  marsmoon2text.visible=false;
-	});    
-
-	  loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
-	    textGeometry = new THREE.TextGeometry( "Jupiter", {font: font,
-	    size: 1.0,
-	    height: .1,
-	    curveSegments: 5,
-	  });
-	  jupitertext = new THREE.Mesh( textGeometry, textMaterial );
-	  jupitertext.position.y+=2;
-	  planets[4].add( jupitertext );
-	  jupitertext.visible=false;
-	});   
-
-	   loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
-	    textGeometry = new THREE.TextGeometry( "Saturn", {font: font,
-	    size: 1.0,
-	    height: .1,
-	    curveSegments: 5,
-	  });
-	  saturntext = new THREE.Mesh( textGeometry, textMaterial );
-	  saturntext.position.y+=1.5;
-	  planets[5].add( saturntext );
-	  saturntext.visible=false;
-	});
-
-	    loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
-	    textGeometry = new THREE.TextGeometry( "Uranus", {font: font,
-	    size: 1.0,
-	    height: .1,
-	    curveSegments: 5,
-	  });
-	  uranustext = new THREE.Mesh( textGeometry, textMaterial );
-	  uranustext.position.y+=1.5;
-	  planets[6].add( uranustext );
-	  uranustext.visible=false;
-	});   
-
-	     loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
-	    textGeometry = new THREE.TextGeometry( "Neptune", {font: font,
-	    size: 1.0,
-	    height: .1,
-	    curveSegments: 5,
-	  });
-	  neptunetext = new THREE.Mesh( textGeometry, textMaterial );
-	  neptunetext.position.y+=1;
-	  planets[7].add( neptunetext );
-	  neptunetext.visible=false;
-	});   
-
-
-
-
-
-}
-
-
-
-
-var raycaster, mouse;
-
-function setupRaycasting()
-{
-	raycaster = new THREE.Raycaster();
-	mouse = new THREE.Vector2();
-
-	render2();
-}
-
-
-document.addEventListener("mousemove", function(event){
-
-	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
-});
-
-
-var lockon=false;
-
-var planetandsuntexts=[suntext,mercurytext,venustext,earthtext,earthmoontext,marstext,marsmoon1text,marsmoon2text,jupitertext,
-   saturntext,uranustext,neptunenext];
-
-
-function render2() {
-	window.requestAnimationFrame(render2);
-
-	// update the picking ray with the camera and mouse position
-	raycaster.setFromCamera( mouse, camera );
-
-	// calculate objects intersecting the picking ray
-	var intersects = raycaster.intersectObjects( scene.children );
-
-
-
-	for ( var i = 0; i < intersects.length; i++ ) {
-
-
-
-
-		if(intersects[ i ].object.id==sun.id)
-		{
-			lockon=true;
-			suntext.lookAt(camera.position);
-  			suntext.visible=true;
-  			setTimeout(function(){ suntext.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==planets[0].id)
-		{
-			lockon=true;
-			mercurytext.lookAt(camera.position);
-  			mercurytext.visible=true;
-  			setTimeout(function(){ mercurytext.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==planets[1].id)
-		{
-			lockon=true;
-			venustext.lookAt(camera.position);
-  			venustext.visible=true;
-  			setTimeout(function(){ venustext.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==planets[2].id)
-		{
-			lockon=true;
-			earthtext.lookAt(camera.position);
-  			earthtext.visible=true;
-  			setTimeout(function(){ earthtext.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==earthmoon.id)
-		{
-			lockon=true;
-			earthmoontext.lookAt(camera.position);
-  			earthmoontext.visible=true;
-  			setTimeout(function(){ earthmoontext.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==planets[3].id)
-		{
-			lockon=true;
-			marstext.lookAt(camera.position);
-  			marstext.visible=true;
-  			setTimeout(function(){ marstext.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==moons[0].id)
-		{
-			lockon=true;
-			marsmoon1text.lookAt(camera.position);
-  			marsmoon1text.visible=true;
-  			setTimeout(function(){ marsmoon1text.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==moons[1].id)
-		{
-			lockon=true;
-			marsmoon2text.lookAt(camera.position);
-  			marsmoon2text.visible=true;
-  			setTimeout(function(){ marsmoon2text.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==planets[4].id)
-		{
-			lockon=true;
-			jupitertext.lookAt(camera.position);
-  			jupitertext.visible=true;
-  			setTimeout(function(){ jupitertext.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==planets[5].id)
-		{
-			lockon=true;
-			saturntext.lookAt(camera.position);
-  			saturntext.visible=true;
-  			setTimeout(function(){ saturntext.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==planets[6].id)
-		{
-			lockon=true;
-			uranustext.lookAt(camera.position);
-  			uranustext.visible=true;
-  			setTimeout(function(){ uranustext.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==planets[7].id)
-		{
-			lockon=true;
-			neptunetext.lookAt(camera.position);
-  			neptunetext.visible=true;
-  			setTimeout(function(){ neptunetext.visible=false }, 1500);
-		}
-		else
-		{
-			lockon=false;
-		}
-	
-	}
-
-	renderer.render( scene, camera );
-
-}
-
-
-
-
-
-window.addEventListener("load", function () {
-
-    
- 	const loader = document.querySelector(".loader");
-	   loader.className += " hidden"; // class "loader hidden"
-
-
-
-});
-
-	
-function createGithubGui()
-{
-
-
-var gui = new dat.GUI({ autoPlace: false });
-
-
-var customContainer = document.getElementById('my-gui-container');
-customContainer.appendChild(gui.domElement);
-
-
-
-	guiElements2 =  new function() {
-		
-	  this.GITHUB = "https://github.com/Alimalik2000/Solar.js";
-	  this.Sun = function(){};
-	
-	};
-	
-	 var pt =  gui.add(guiElements2, 'GITHUB');
-	  pt.onChange(function(value) {window.open("https://github.com/Alimalik2000/Solar.js"); ;});
-
-
-}
-
-
