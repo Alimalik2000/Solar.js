@@ -434,7 +434,7 @@ function setupPlanetText()
   );
 
 	var textGeometry;
-	//textgeometry cabnot change size or "text" so it to be declared indivually for every element, loops were
+	//textgeometry cannot change size or "text" so it to be declared indivually for every element, loops were
 	//causing issues as well so this was the best course of action
 	
     loader.load( 'visuals/fonts/helvetiker_regular.typeface.json', function ( font ) {
@@ -530,7 +530,7 @@ function setupRaycasting()
 
 
 
-//helper function to get the location of moouse on the scene
+//listener function to get the location of moouse on the scene
 document.addEventListener("mousemove", function(event){
 
 	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
@@ -540,8 +540,9 @@ document.addEventListener("mousemove", function(event){
 
 
 
-//recurivly checks what the mouse is hovering over
-function render2() {
+//recursivly checks what the mouse is hovering over
+function render2() 
+{
 
 	window.requestAnimationFrame(render2);
 
@@ -551,131 +552,69 @@ function render2() {
 	// calculate objects intersecting the picking ray
 	var intersects = raycaster.intersectObjects( scene.children );
 
-
-
 	for ( var i = 0; i < intersects.length; i++ ) {
 
-		if(intersects[ i ].object.id==sun.id)
-		{
-			suntext.lookAt(camera.position);
-  			suntext.visible=true;
-  			setTimeout(function(){ suntext.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==planets[0].id)
-		{
-			mercurytext.lookAt(camera.position);
-  			mercurytext.visible=true;
-  			setTimeout(function(){ mercurytext.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==planets[1].id)
-		{
-			venustext.lookAt(camera.position);
-  			venustext.visible=true;
-  			setTimeout(function(){ venustext.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==planets[2].id)
-		{
-			earthtext.lookAt(camera.position);
-  			earthtext.visible=true;
-  			setTimeout(function(){ earthtext.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==earthmoon.id)
-		{
-			earthmoontext.lookAt(camera.position);
-  			earthmoontext.visible=true;
-  			setTimeout(function(){ earthmoontext.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==planets[3].id)
-		{
-			marstext.lookAt(camera.position);
-  			marstext.visible=true;
-  			setTimeout(function(){ marstext.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==moons[0].id)
-		{
-			marsmoon1text.lookAt(camera.position);
-  			marsmoon1text.visible=true;
-  			setTimeout(function(){ marsmoon1text.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==moons[1].id)
-		{
-			marsmoon2text.lookAt(camera.position);
-  			marsmoon2text.visible=true;
-  			setTimeout(function(){ marsmoon2text.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==planets[4].id)
-		{
-			jupitertext.lookAt(camera.position);
-  			jupitertext.visible=true;
-  			setTimeout(function(){ jupitertext.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==planets[5].id)
-		{
-			saturntext.lookAt(camera.position);
-  			saturntext.visible=true;
-  			setTimeout(function(){ saturntext.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==planets[6].id)
-		{
-			uranustext.lookAt(camera.position);
-  			uranustext.visible=true;
-  			setTimeout(function(){ uranustext.visible=false }, 1500);
-		}
-		else if(intersects[ i ].object.id==planets[7].id)
-		{
-			neptunetext.lookAt(camera.position);
-  			neptunetext.visible=true;
-  			setTimeout(function(){ neptunetext.visible=false }, 1500);
-		}
-		else
-		{
-			lockon=false;
-		}
-	
-	}
+		//if the object being intersected is a planet, show its text
+		if(intersects[ i ].object.id==sun.id){show(suntext);}
+		else if(intersects[ i ].object.id==planets[0].id){show(mercurytext);}
+		else if(intersects[ i ].object.id==planets[1].id){show(venustext);}
+		else if(intersects[ i ].object.id==planets[2].id){show(earthtext);}
+		else if(intersects[ i ].object.id==earthmoon.id){show(earthmoontext);}
+		else if(intersects[ i ].object.id==planets[3].id){show(marstext);}
+		else if(intersects[ i ].object.id==moons[0].id){show(marsmoon1text);}
+		else if(intersects[ i ].object.id==moons[1].id){show(marsmoon2text);}
+		else if(intersects[ i ].object.id==planets[4].id){show(jupitertext);}
+		else if(intersects[ i ].object.id==planets[5].id){show(saturntext);}
+		else if(intersects[ i ].object.id==planets[6].id){show(uranustext);}
+		else if(intersects[ i ].object.id==planets[7].id){show(neptunetext);}}
 
 	renderer.render( scene, camera );
 
+	//show function when called makes the text look at camera nd hites it in 1.5 seconds
+	function show(planettext)
+	{
+	
+		planettext.lookAt(camera.position);
+	  	planettext.visible=true;
+	  	setTimeout(function(){ planettext.visible=false }, 1500);
+
+	}
+
+
 }
 
 
-
+//listener used to end loading screen and show the scene
 window.addEventListener("load", function () {
 
-    
  	const loader = document.querySelector(".loader");
-	   loader.className += " hidden"; // class "loader hidden"
-
-
+	loader.className += " hidden"; // class "loader hidden"
 
 });
 
-	
+
+
+//gui in top left corner to show link to my github page
 function createGitHubGui()
 {
 
+	 var gui = new dat.GUI({ autoPlace: false });
 
- var gui = new dat.GUI({ autoPlace: false });
+	 var customContainer = document.getElementById('my-gui-container');
+	 customContainer.appendChild(gui.domElement);
 
+	 guiElements2 =  new function() 
+	 {
 
-var customContainer = document.getElementById('my-gui-container');
-customContainer.appendChild(gui.domElement);
-
-
-
-	guiElements2 =  new function() {
+		  this.GITHUB = "https://github.com/Alimalik2000/Solar.js";
+		  this.Sun = function(){};
 		
-	  this.GITHUB = "https://github.com/Alimalik2000/Solar.js";
-	  this.Sun = function(){};
-	
-	};
-	
+	 };
+		
 	 var pt =  gui.add(guiElements2, 'GITHUB');
-	  pt.onChange(function(value) {window.open("https://github.com/Alimalik2000/Solar.js"); ;});
-
+	 pt.onChange(function(value) {window.open("https://github.com/Alimalik2000/Solar.js"); ;});
 
 }
-
 
 
 
