@@ -1,9 +1,9 @@
 //load all textures
-var suntexture = new THREE.TextureLoader().load( 'visuals/textures/suntexture.jpg' );
+var suntexture 	= new THREE.TextureLoader().load( 'visuals/textures/suntexture.jpg' );
 var mercurytexture = new THREE.TextureLoader().load( 'visuals/textures/mercurytexture.jpg' );
 var venustexture = new THREE.TextureLoader().load( 'visuals/textures/venustexture.jpg' );
 var venuscloudmesh = new THREE.TextureLoader().load( 'visuals/textures/venuscloudmap.jpg' );
-var earthtexture = new THREE.TextureLoader().load( 'visuals/textures/earthtexture.jpg' );
+var earthtexture = new THREE.TextureLoader().load( 'visuals/textures/earthtexture.png' );
 var earthcloudmesh = new THREE.TextureLoader().load( 'visuals/textures/earthcloudmap.jpg' );
 var earthmoontexture = new THREE.TextureLoader().load( 'visuals/textures/earthmoontexture.jpg' );
 var marstexture = new THREE.TextureLoader().load( 'visuals/textures/marstexture.jpg' );
@@ -42,6 +42,9 @@ var neptunecloudmeshNORMAL = new THREE.TextureLoader().load( 'visuals/normals/ne
 
 
 
+//set to true when program is first opened, false when user starts interacting
+var intro;
+
 //html file will call main on load
 function main()
 {	
@@ -58,6 +61,8 @@ function main()
 	setupRaycasting();
 	createGitHubGui();
 	render();
+
+	intro = true
 
 }
 
@@ -183,7 +188,7 @@ function stylizePlanets()
 	var sizes=[.41,.61,.51,2.02,1.21,1.02,1.02];
 	var texts=[venuscloudmesh,earthcloudmesh,marscloudmesh,jupitercloudmesh,saturncloudmesh,uranuscloudmesh,neptunecloudmesh];
 	var norms=[venuscloudmeshNORMAL,earthcloudmeshNORMAL,marscloudmeshNORMAL,jupitercloudmeshNORMAL,saturncloudmeshNORMAL,uranuscloudmeshNORMAL,neptunecloudmeshNORMAL];
-	var opac=[.3,.2,.3,.3,.15,.1,.15];
+	var opac=[.2,.2,.3,.3,.15,.1,.15];
 
 	for(var i=0;i<7;i++)
 	{
@@ -234,7 +239,7 @@ function createMoons()
 {
 
 	//earth moon, creating outside array because it does not have a normal
-	geometry = new THREE.SphereGeometry(.3, 20, 20);
+	geometry = new THREE.SphereGeometry(.285, 20, 20);
 	material = new THREE.MeshPhongMaterial( { map:earthmoontexture} );
 	earthmoon = new THREE.Mesh( geometry, material );
 	earthmoon.position.set(20, .25, -20);
@@ -328,17 +333,18 @@ function createBackground()
 
 
 //gui to lock on planets
+var guiDisplay;
 var guiElements;
 function setupGui()
 {
 
-	var guiDisplay = new dat.GUI({
+	guiDisplay = new dat.GUI({
     height : 5 * 32 - 1
 	});
 
 	  guiElements =  new function() {
 		
-	  this.PLANETLOCK = "          ENABLED";
+	  this.PLANETLOCK = "    ZOOM IN BELOW";
 	  this.Sun = function(){};
 	  this.Mercury= function(){};
 	  this.Venus= function(){};
@@ -388,6 +394,7 @@ function setupGui()
 //and freeroam is set to false
 function focus(planet)
 {
+
 	freeRoam=false;
 
 	guiElements.PLANETLOCK="          ENABLED";
@@ -409,7 +416,8 @@ function focus(planet)
 document.addEventListener("mousedown", function(event)
 {
 
-    freeRoam=true
+    freeRoam=true;
+    intro=false;
 
     guiElements.PLANETLOCK="          DISABLED"
 
@@ -570,18 +578,18 @@ function render2()
 
 	renderer.render( scene, camera );
 
-	//show function when called makes the text look at camera nd hites it in 1.5 seconds
-	function show(planettext)
-	{
+}
+
+//show function when called makes the text look at camera nd hites it in 1.5 seconds
+function show(planettext)
+{
 	
-		planettext.lookAt(camera.position);
-	  	planettext.visible=true;
-	  	setTimeout(function(){ planettext.visible=false }, 1500);
-
-	}
-
+	planettext.lookAt(camera.position);
+  	planettext.visible=true;
+  	setTimeout(function(){ planettext.visible=false }, 1500);
 
 }
+
 
 
 //listener used to end loading screen and show the scene
@@ -625,7 +633,7 @@ function createGitHubGui()
 var moveparticles=0;
 
 //planet and sun locks from gui, Sun to Neptune
-var locksunandplanets=[true,false,false,false,false,false,false,false,false]
+var locksunandplanets=[false,false,false,false,false,false,false,false,false]
 
 //true is camera is not locked on a planet from gui, false otherwise
 var freeRoam=false;
@@ -652,7 +660,7 @@ function render() {
   planets[1].position.y = Math.sin( time * -1.5 ) * 2;
   planets[1].position.z = Math.cos( time * -2.5 ) * 9;
   //venus cloudmap rotation
-  clouds[0].rotation.y+=.001;
+  clouds[0].rotation.y+=.0004;
   
   //earth rotation
   planets[2].position.x = Math.sin( time * 1.5 ) * 13;
@@ -661,8 +669,8 @@ function render() {
   clouds[1].rotation.y+=.001;
 
   //earth moon rotation
-  earthmoon.position.x = planets[2].position.x+Math.sin( time * 1.1 ) * 1.5;
-  earthmoon.position.z = planets[2].position.z-Math.cos( time * 1.1 ) * 1.5;
+  earthmoon.position.x = planets[2].position.x+Math.sin( time * 1.1 ) * 2;
+  earthmoon.position.z = planets[2].position.z-Math.cos( time * 1.1 ) * 2;
   earthmoon.rotation.y-=.001;
 
   //mars rotation
@@ -738,7 +746,7 @@ function render() {
 
   //planet lock system
   //distance from each planet/sun camera will be
-  var lockdistance=[21,3,4,5,4,10,9,9,9]
+  var lockdistance=[18,2.5,3,4,3.5,10,9,9,9]
   //speed camera will revolve around planet/sun
   var lockspeed=[1,1,4,2,2,2,2,2,2]
   if(freeRoam==false)
@@ -753,9 +761,9 @@ function render() {
   				{
   					controls.target0.set( sun.position.x, sun.position.y, sun.position.z);
   					controls.reset();
-  					camera.position.x=sun.position.x+Math.sin(time)*21;
+  					camera.position.x=sun.position.x+Math.sin(time)*18;
   					camera.position.y=sun.position.y;
-  					camera.position.z=sun.position.z-Math.cos(time)*21;
+  					camera.position.z=sun.position.z-Math.cos(time)*18;
 
   				}
   				else
@@ -775,6 +783,20 @@ function render() {
 	 	controls.update();
 	 
 	 }
+
+	//if user first enters the program
+	if (intro)
+	{
+		controls.target0.set( sun.position.x, sun.position.y, sun.position.z);
+  		controls.reset();
+  		camera.position.x=sun.position.x+Math.sin(time)*22;
+  		camera.position.y=sun.position.y+4;
+  		camera.position.z=sun.position.z-Math.cos(time)*22;
+
+  		controls.update();
+
+	}
+
 
   renderer.render(scene, camera);
 }
