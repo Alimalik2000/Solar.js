@@ -117,7 +117,7 @@ function createLight()
 
 
 
-//creates the sun in the scene and 100 glowing layers around it
+//creates the sun in the scene and 100 glowing layers around it for glowing effect
 var sun;
 
 function createSun()
@@ -129,7 +129,7 @@ function createSun()
 	sun = new THREE.Mesh( geometry, material );
 	scene.add( sun );
 
-	//outer glow for sun, eath layer is slightly farther from eath layer before with less opacity
+	//outer glow for sun, eath layer is slightly farther from eath layer before with less opacity than the layer before
 	//than the layer before
 	var exp=2.70;
 	var pac=.3;
@@ -141,8 +141,8 @@ function createSun()
 		pac=pac*.97;
 		geometry =  new THREE.SphereGeometry( exp, 30, 30 );
 		material = new THREE.MeshBasicMaterial( { map:suntexture, transparent: true, opacity: pac } );
-		glow1 = new THREE.Mesh( geometry, material );
-		sun.add(glow1);
+		glowlayer = new THREE.Mesh( geometry, material );
+		sun.add(glowlayer);
 
 	}
 
@@ -151,7 +151,7 @@ function createSun()
 
 
 //creates all planets in the scene, inside an array
-//array planets are planets in order from Mercury to Neptune
+//array planets are planets in order from Mercury to Neptune (inclusive)
 var planets=[];
 
 function createPlanets()
@@ -184,7 +184,7 @@ var rings=[];
 function stylizePlanets()
 {
 
-	//clouds for all planets Venus until Neptune, Mercury does NOT have an atmosphere
+	//clouds for all planets Venus until Neptune (inclusive), Mercury does NOT have an atmosphere
 	var sizes=[.41,.61,.51,2.02,1.21,1.02,1.02];
 	var texts=[venuscloudmesh,earthcloudmesh,marscloudmesh,jupitercloudmesh,saturncloudmesh,uranuscloudmesh,neptunecloudmesh];
 	var norms=[venuscloudmeshNORMAL,earthcloudmeshNORMAL,marscloudmeshNORMAL,jupitercloudmeshNORMAL,saturncloudmeshNORMAL,uranuscloudmeshNORMAL,neptunecloudmeshNORMAL];
@@ -208,7 +208,7 @@ function stylizePlanets()
 
 	}
 
-	//rings for all planets Jupiter until Neptune
+	//rings for all planets Jupiter until Neptune (inclusive)
 	var sizes1=[2.2,2,1.6,1.7];
 	var sizes2=[3,2.9,2.0,2.4];
 	var rotations = [10.9,90,20,90]
@@ -232,7 +232,7 @@ function stylizePlanets()
 
 //creates all moons in scene
 var earthmoon;
-//array holds moons from Phobos until Deimos
+//array holds moons from Phobos until Deimos (inclusive)
 var moons = [];
 
 function createMoons()
@@ -245,7 +245,7 @@ function createMoons()
 	earthmoon.position.set(20, .25, -20);
 	scene.add(earthmoon);
 
-	//creating moons from Phobos until Deimos
+	//creating moons from Phobos until Deimos (inclusive)
 	var sizes = [.2,.12];
 	var maps = [marsmoon1texture, marsmoon2texture];
 	var normals = [marsmoon1textureNORMAL, marsmoon2textureNORMAL]
@@ -332,7 +332,7 @@ function createBackground()
 
 
 
-//gui to lock on planets
+//gui to lock on and zoom in on planets
 var guiDisplay;
 var guiElements;
 function setupGui()
@@ -387,27 +387,27 @@ function setupGui()
 
 	  var neptune1 =  guiDisplay.add(guiElements, 'Neptune');
 	 neptune1.onChange(function(value) {focus("neptune");});
+
+	 //when a planet is chosen on gui, it is locked on and all other planets are unlocked
+	//and freeroam is set to false
+	function focus(planet)
+	{
+
+		freeRoam=false;
+
+		guiElements.PLANETLOCK="          ENABLED";
+		if(planet=="sun")locksunandplanets[0]=true;
+		if(planet=="mercury")locksunandplanets[1]=true;
+		if(planet=="venus")locksunandplanets[2]=true;
+		if(planet=="earth")locksunandplanets[3]=true;
+		if(planet=="mars")locksunandplanets[4]=true;
+		if(planet=="jupiter")locksunandplanets[5]=true;
+		if(planet=="saturn")locksunandplanets[6]=true;
+		if(planet=="uranus")locksunandplanets[7]=true;
+		if(planet=="neptune")locksunandplanets[8]=true;
+
+	}
 	 
-}
-
-//when a planet is chosen on gui, it is locked on and all other planets are unlocked
-//and freeroam is set to false
-function focus(planet)
-{
-
-	freeRoam=false;
-
-	guiElements.PLANETLOCK="          ENABLED";
-	if(planet=="sun")locksunandplanets[0]=true;
-	if(planet=="mercury")locksunandplanets[1]=true;
-	if(planet=="venus")locksunandplanets[2]=true;
-	if(planet=="earth")locksunandplanets[3]=true;
-	if(planet=="mars")locksunandplanets[4]=true;
-	if(planet=="jupiter")locksunandplanets[5]=true;
-	if(planet=="saturn")locksunandplanets[6]=true;
-	if(planet=="uranus")locksunandplanets[7]=true;
-	if(planet=="neptune")locksunandplanets[8]=true;
-
 }
 
 
@@ -417,6 +417,7 @@ document.addEventListener("mousedown", function(event)
 {
 
     freeRoam=true;
+    //once a user interacts with the program, inro is disabled
     intro=false;
 
     guiElements.PLANETLOCK="          DISABLED"
@@ -430,10 +431,11 @@ document.addEventListener("mousedown", function(event)
 });
 
 
+
 //textgeometry to apprear above planet when mouse if hovered on, due to editing visiblity and other factors
 //textgeotry could not be created on using loops or in an array
 var suntext, mercurytext, venustext, earthtext, earthmoontext,marstext,marsmoon1text,marsmoon2text,
-jupitertext,saturntext,uranustext,neptunenext;
+jupitertext,saturntext,uranustext,neptunetext;
 
 function setupPlanetText()
 {
@@ -563,18 +565,45 @@ function render2()
 	for ( var i = 0; i < intersects.length; i++ ) {
 
 		//if the object being intersected is a planet, show its text
-		if(intersects[ i ].object.id==sun.id){show(suntext);}
-		else if(intersects[ i ].object.id==planets[0].id){show(mercurytext);}
-		else if(intersects[ i ].object.id==planets[1].id){show(venustext);}
-		else if(intersects[ i ].object.id==planets[2].id){show(earthtext);}
-		else if(intersects[ i ].object.id==earthmoon.id){show(earthmoontext);}
-		else if(intersects[ i ].object.id==planets[3].id){show(marstext);}
-		else if(intersects[ i ].object.id==moons[0].id){show(marsmoon1text);}
-		else if(intersects[ i ].object.id==moons[1].id){show(marsmoon2text);}
-		else if(intersects[ i ].object.id==planets[4].id){show(jupitertext);}
-		else if(intersects[ i ].object.id==planets[5].id){show(saturntext);}
-		else if(intersects[ i ].object.id==planets[6].id){show(uranustext);}
-		else if(intersects[ i ].object.id==planets[7].id){show(neptunetext);}}
+		if(!locksunandplanets[0])
+		{
+			if(intersects[ i ].object.id==sun.id){show(suntext);}
+		}
+		if(!locksunandplanets[1])
+		{
+			if(intersects[ i ].object.id==planets[0].id){show(mercurytext);}
+		}
+		if(!locksunandplanets[2])
+		{
+			if(intersects[ i ].object.id==planets[1].id){show(venustext);}
+		}
+		if(!locksunandplanets[3])
+		{
+			if(intersects[ i ].object.id==planets[2].id){show(earthtext);}
+			if(intersects[ i ].object.id==earthmoon.id){show(earthmoontext);}
+		}
+		if(!locksunandplanets[4])
+		{
+			if(intersects[ i ].object.id==planets[3].id){show(marstext);}
+			if(intersects[ i ].object.id==moons[0].id){show(marsmoon1text);}
+			if(intersects[ i ].object.id==moons[1].id){show(marsmoon2text);}
+		}
+		if(!locksunandplanets[5])
+		{
+			if(intersects[ i ].object.id==planets[4].id){show(jupitertext);}
+		}
+		if(!locksunandplanets[6])
+		{
+			if(intersects[ i ].object.id==planets[5].id){show(saturntext);}
+		}
+		if(!locksunandplanets[7])
+		{
+			if(intersects[ i ].object.id==planets[6].id){show(uranustext);}
+		}
+		if(!locksunandplanets[8])
+		{
+			if(intersects[ i ].object.id==planets[7].id){show(neptunetext);}}
+		}
 
 	renderer.render( scene, camera );
 
