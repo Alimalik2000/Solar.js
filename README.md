@@ -4,7 +4,9 @@ Demo
 
    https://youtu.be/kV9rcRvckmQ
     
-  
+Play With It Yourself
+
+   https://alimalik2000.github.io/Solar.js/Solar.html
 
 Prerequisites
 
