@@ -1,7 +1,10 @@
 # Solar.js
 
 Demo
+
     https://youtu.be/kV9rcRvckmQ
+    
+  
 
 Prerequisites
 
@@ -10,9 +13,9 @@ Prerequisites
     
 Getting Started
 
-    1. Fork this repository 🍴
+    1. Fork this repository 
 
-    2. Clone your forked repository to your local system 👥
+    2. Clone your forked repository to your local system 
 
     git clone https://github.com/<your-username>/Solar.js.git
 
