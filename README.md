@@ -1,6 +1,6 @@
 # Solar.js
 
-![](http://i.imgur.com/OUkLi.gif)
+![](https://media2.giphy.com/media/ZA4gW8uhdBFjrKplBH/giphy.gif)
 
 Prerequisites
 
