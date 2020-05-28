@@ -1,6 +1,7 @@
 # Solar.js
 
-![](https://media2.giphy.com/media/ZA4gW8uhdBFjrKplBH/giphy.gif)
+Demo
+    https://youtu.be/kV9rcRvckmQ
 
 Prerequisites
 
