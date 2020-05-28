@@ -4,7 +4,7 @@
 
 Introduction
 
-This repo makes use of the three.js library and webgl to create a stunning 3D model of our solar system. Complete with the sun, planets, moons, rings and stars. It leverages ray casting, volumetric rendering, various shading models and much more to create a real time rendering graphics program with intercative visual effects. You can find more details about this project, watch a demo, and play with it yourself by reading below.
+This repo makes use of the three.js library and webgl to create a stunning 3D model of our solar system. Complete with the sun, planets, moons, rings and stars. It leverages ray casting, volumetric rendering, various shading models and much more to create a real time rendering graphics program with interactive visual effects. You can find more details about this project, watch a demo, and play with it yourself by reading below.
 
 Demo
 
