@@ -56,10 +56,10 @@ function main()
 	stylizePlanets();
 	createMoons();
 	createBackground();
-	//setupGui();
-	//setupPlanetText();
-	//setupRaycasting();
-	//createGitHubGui();
+	setupGui();
+	setupPlanetText();
+	setupRaycasting();
+	createGitHubGui();
 	render();
 
 	intro = true
