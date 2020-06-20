@@ -46,6 +46,5 @@ Built With
 Authors
 
     Ali Malik
-    Erica Nguyen
 
 
