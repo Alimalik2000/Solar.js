@@ -32,7 +32,7 @@ Getting Started
 Running
 
     Open the Solar.html file after creating a local server, heres a simple server setup tutorial 
-    https://www.youtube.com  /watch?v=lE6Y6M9xPLw
+    https://www.youtube.com/watch?v=lE6Y6M9xPLw
 
 Built With
 
